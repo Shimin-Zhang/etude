@@ -286,8 +286,8 @@ one's own confidence level.
    detail? (b) is it accurate — no false implication? (c) is it appropriately
    concise?
 2. Each module supplies **golden exemplars** — at least one strong and one weak
-   example per tier, stored in `exemplars/<ID>/<tier>/`. The coach compares the
-   learner's response to these.
+   example per tier, stored in `exemplars/<ID>/<tier>.md` (one file per tier). The
+   coach compares the learner's response to these.
 3. The coach grades the rubric criteria explicitly, one by one, and cites which
    exemplar the learner's response is closest to.
 4. This is explicitly softer than executable grading. The coach states:

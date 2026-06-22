@@ -95,8 +95,9 @@ idea is explicitly **refuted** as a teachable deep structure (`evidence-base.md`
 Refuted; Gilmore & Green 1988 found plan-sensitivity is **notation-dependent** — Pascal
 programmers were cued by plans, BASIC programmers were not). So this module teaches plans
 as **real cues to recognize**, never as a memorizable catalog that *is* programming. (The
-Soloway-Ehrlich discourse result itself is not unchallenged — later work, e.g. Widowski,
-found experts sometimes did *better* on unplan-like code; see §8.)
+Soloway-Ehrlich discourse result itself is not unchallenged — Gilmore & Green 1988 found
+plan-sensitivity is **notation-dependent**, so experts do *not* uniformly benefit from
+plan-like structure; see §8.)
 
 ---
 
@@ -547,10 +548,12 @@ languages** (Shneiderman → McKeithen) and matches the chess literature (Gobet 
    module drills *recognizing* plans, never *memorizing a canon* (`evidence-base.md` →
    Refuted, constrains B1 too).
 3. **The discourse-violation result is contested.** Soloway & Ehrlich (1984) found experts
-   hurt most by misleading names, but later work (e.g. Widowski) found experts sometimes
-   did *better* on unplan-like code. The robust, uncontested claim is the *direction* —
-   experts **rely on** name/structure beacons more than novices — which is exactly what the
-   misleading-name drills exploit; the coach does not assert a precise effect size.
+   hurt most by misleading names, but the expert advantage on plan-like structure is **not
+   universal**: Gilmore & Green (1988) found plan-sensitivity is **notation-dependent**
+   (Pascal programmers cued by plans, BASIC programmers not; `evidence-base.md` → Refuted), so
+   experts do *not* uniformly benefit from plan-like structure. The robust, uncontested claim
+   is the *direction* — experts **rely on** name/structure beacons more than novices — which is
+   exactly what the misleading-name drills exploit; the coach does not assert a precise effect size.
 
 And the curriculum-wide **transfer caveat** (`evidence-base.md`): the primary evidence is
 from *novices/programmers, 1976–2002*, in FORTRAN/ALGOL/Pascal; that explicitly drilling

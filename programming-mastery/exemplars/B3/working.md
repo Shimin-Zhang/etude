@@ -54,11 +54,15 @@ The contract promises **order preservation**, so the test must use an input whos
 de-duplicated order differs from `set()` ordering:
 
 ```python
-assert dedupe([3, 1, 3, 2, 1]) == [3, 1, 2]
+got = dedupe([3, 1, 3, 2, 1])
+assert got == [3, 1, 2], f"order not preserved: got {got}"
 ```
 
 - **Against the buggy impl** → `status: error`,
-  `AssertionError: ... got [1, 2, 3]` (the test **catches the bug** ✓).
+  `AssertionError: order not preserved: got [1, 2, 3]` (the test **catches the bug** ✓).
+  *(The `got [1, 2, 3]` value comes from the learner's own assertion message; a **bare**
+  `assert dedupe(...) == [...]` would emit only `AssertionError` with no value — the
+  message form is what surfaces the actual output.)*
 - **Against the fixed impl** → `status: ok`, `"test passed"` (the test **passes** ✓).
 
 **Why it must target order.** A weak test like `assert sorted(dedupe([1, 2, 3])) == [1, 2, 3]`
@@ -104,12 +108,14 @@ The bug only bites when an element sits **exactly on the `hi` boundary**, so the
 put a value there:
 
 ```python
-assert count_in_range([1, 5, 10], 1, 10) == 3
+got = count_in_range([1, 5, 10], 1, 10)
+assert got == 3, f"hi boundary excluded: got {got}"
 ```
 
 - **Against the buggy impl** → `status: error`,
-  `AssertionError: ... got 2` (the element `10` on the `hi` boundary is wrongly excluded —
-  bug **caught** ✓).
+  `AssertionError: hi boundary excluded: got 2` (the element `10` on the `hi` boundary is
+  wrongly excluded — bug **caught** ✓). *(As in W1, the `got 2` value comes from the
+  learner's own assertion message; a bare `assert` would print only `AssertionError`.)*
 - **Against the fixed impl** → `status: ok`, `"test passed"` ✓.
 
 **Why it must hit the boundary.** A test whose values avoid the `hi` edge —

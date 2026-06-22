@@ -45,7 +45,7 @@ primary sources; this module does not re-derive them:
 
 **(b) The general calibration science — the metacognition/calibration literature this
 module teaches from.** `[Verified-adjacent]`: established cognitive/educational psychology;
-**NEW to this curriculum** (flagged for `evidence-base.md`, see §8 and the report):
+**now grounded in `evidence-base.md`** (→ Metacognition & calibration (module F1); see §8):
 
 - **Flavell, J. H. (1979). Metacognition and cognitive monitoring: a new area of
   cognitive–developmental inquiry.** *American Psychologist*, 34(10), 906–911.
@@ -645,8 +645,9 @@ is the AI-era failure the curriculum is built to close (spec §12).
   `references/assessment.md`.
 - Evidence grounding (AI-era impact: METR 2025 / Fernandes 2025 / Tankelevitch 2024;
   instructional pillar: Metacognition + Illusions-of-fluency rows; transfer caveat; learning
-  ≠ performance): `references/evidence-base.md`. **NEW calibration citations to add there**
-  (flagged, not silently used): Flavell 1979; Nelson & Narens 1990; Lichtenstein & Fischhoff
-  1977; Kruger & Dunning 1999; Koriat & Bjork 2005; Dunlosky & Rawson 2012.
+  ≠ performance): `references/evidence-base.md`. The general calibration citations are **now
+  grounded in `evidence-base.md`** (→ Metacognition & calibration (module F1)): Flavell 1979;
+  Nelson & Narens 1990; Lichtenstein & Fischhoff 1977; Kruger & Dunning 1999; Koriat & Bjork
+  2005; Dunlosky & Rawson 2012.
 - Golden exemplars (~3 per tier, runner-verified predictions + gold calibration/AI-trust
   rubrics): `exemplars/F1/foundations.md`, `exemplars/F1/working.md`, `exemplars/F1/advanced.md`.

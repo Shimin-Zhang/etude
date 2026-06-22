@@ -23,10 +23,11 @@
 
 This module is **mixed-status by design**, and the coach must keep the two layers
 distinct. **Honesty rule (from `evidence-base.md`): never present canon as verified
-science.** None of the canon citations below are in `evidence-base.md` yet — they were
-verified against primary sources during this module's authoring and are flagged for the
-controller to add. The TDD-evidence layer connects to the AI-era B3 priority already in
-`evidence-base.md` ("AI code carries defects" → B3).
+science.** The canon citations below are grounded in `evidence-base.md` → Module-specific
+& craft sources (the B3a `[Practitioner-canon]` and B3b `[Some empirical] — MIXED` blocks),
+where each was verified against primary sources during this module's authoring. The
+TDD-evidence layer connects to the AI-era B3 priority already in `evidence-base.md`
+("AI code carries defects" → B3).
 
 ### 1a. The canon layer — test design `[Practitioner-canon]`
 
@@ -574,8 +575,8 @@ and the coach must say so:
 - **The test-design techniques** (edge/boundary cases, equivalence partitioning, properties,
   metamorphic relations) are **craft that works in practice** — Myers, Dijkstra, Hughes,
   Barr et al. — **not** replicated empirical findings. Present them as "respected practice,"
-  never "research shows." None are in `evidence-base.md` yet; they are **flagged for the
-  controller to add** as `[Practitioner-canon]` (with the oracle/metamorphic survey sources
+  never "research shows." They are grounded in `evidence-base.md` → Module-specific & craft
+  sources (block **B3a**) as `[Practitioner-canon]` (with the oracle/metamorphic survey sources
   as peer-reviewed *surveys*, not effectiveness experiments).
 - **The TDD evidence is genuinely mixed** and must not be inflated into "TDD works." The
   strongest synthesis (Rafique & Mišić 2013) finds only a **small quality effect** and a
@@ -644,9 +645,9 @@ tracker notes that gap as more diagnostic than another passed synthetic drill.
   2015 oracle problem; Claessen & Hughes 2000 + Hughes 2019 properties; Chen et al. 1998 /
   Segura et al. 2016 metamorphic testing) and the **mixed-empirical** TDD layer (Rafique &
   Mišić 2013; Turhan et al. 2010; Fucci et al. 2016/2017; Inozemtseva & Holmes 2014):
-  `references/evidence-base.md` (**flagged: these B3-specific citations are not yet in the
-  evidence base — controller to add, badged honestly as `[Practitioner-canon]` vs.
-  `[Some empirical — mixed]`**). AI-era B3 priority ("AI code carries defects" → precise
+  `references/evidence-base.md` → Module-specific & craft sources (these B3-specific citations
+  are now in the evidence base, badged honestly as block **B3a** `[Practitioner-canon]` vs.
+  block **B3b** `[Some empirical] — MIXED`). AI-era B3 priority ("AI code carries defects" → precise
   specification + verification as a durable skill): `evidence-base.md` → AI-era impact.
 - Golden exemplars (~3 per tier, runner-verified where executable): `exemplars/B3/foundations.md`,
   `exemplars/B3/working.md`, `exemplars/B3/advanced.md`.

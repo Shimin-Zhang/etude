@@ -439,8 +439,9 @@ Recorded for transparency and to keep future authors honest.
   argues the notional machine should be an explicit learning objective. ✓
 - **du Boulay 1986** — confirmed: *J. Educational Computing Research* 2(1), 57–73;
   origin of the notional-machine framing. ✓
-- **McKeithen et al. 1981** — confirmed: experts recalled ~3× more on ordered vs
-  scrambled programs (≈18 vs 6 lines), near-parity across skill on scrambled code. ✓
+- **McKeithen et al. 1981** — confirmed: on *ordered* programs experts recalled ~3× more
+  than novices (≈18 vs 6 lines); on *scrambled* code the groups converged toward
+  near-parity (a small expert residual remains). ✓
 - **Shneiderman 1976** — confirmed: *Int. J. Computer & Information Sciences* 5(2),
   123–143; memorization/recall evidence for semantic vs syntactic knowledge. ✓
 - **Soloway & Ehrlich 1984** — confirmed: IEEE TSE SE-10(5), 595–609; plans + discourse

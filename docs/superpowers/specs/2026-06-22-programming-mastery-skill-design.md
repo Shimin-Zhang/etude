@@ -28,10 +28,10 @@ The differentiator: the curriculum is built on fact-checked findings and openly 
 | Finding | Sources | Module |
 |---|---|---|
 | **Notional machine**: the durable barrier is understanding *runtime dynamics of execution*, not syntax; teach it as an explicit objective. *The single most curriculum-actionable finding.* | Sorva 2013 (ACM TOCE 13(2), doi 10.1145/2483710.2483713); du Boulay 1986 | A1 |
-| **Expertise = better representation**: experts chunk code into larger semantic units & recognize patterns; novices process line-by-line on surface syntax. Signature: expert recall advantage shrinks on *scrambled* code (chess-chunking analogue). Shrinks but doesn't vanish. | Shneiderman 1976; McKeithen et al. 1981; SLR arXiv:2212.07763; Sala & Gobet 2017 (r≈.42) | A2 |
+| **Expertise = better representation**: experts chunk code into larger semantic units & recognize patterns; novices process line-by-line on surface syntax. Signature: expert recall advantage shrinks on *scrambled* code (chess-chunking analogue). Shrinks but doesn't vanish. | Shneiderman 1976; McKeithen et al. 1981; Gobet & Simon 1996 (chess analogue); SLR arXiv:2212.07763 | A2 |
 | **Beacons & programming plans** are real cues experts exploit. | Soloway & Ehrlich 1984 (IEEE TSE); Brooks 1983; Storey 2006; Crosby et al. 2002 | A2 |
 | **Comprehension is active & hypothesis-driven**: top-down (Brooks) + bottom-up (Pennington), mode-switching (von Mayrhauser & Vans 1995). | arXiv:2212.07763; Brooks 1983; Pennington 1987; von Mayrhauser & Vans 1995 | A3, C1 |
-| **Experts plan top-down before coding**: form an *abstract, complete representation* of the solution; novices translate step-by-step. (Teach plan-before-code/decompose — NOT the refuted "plan catalog.") | Adelson 1985; Soloway; Hoc 1977; Rist 1991; Koubek & Salvendy 1988/91 | B1 |
+| **Experts plan top-down before coding**: form an *abstract, complete representation* of the solution; novices translate step-by-step. (Teach plan-before-code/decompose — NOT the refuted "plan catalog.") | Adelson & Soloway 1985 (IEEE TSE); Hoc 1977; Rist 1991; Koubek & Salvendy 1988/91 | B1 |
 | **Reading → tracing → writing**: tracing and "explain in plain English" track with code-*writing* ability — a developmental hierarchy. | BRACElet — Lister et al., Lopez et al. 2008 | A3, B2 |
 | **Years ≠ expertise**: expertise is poorly operationalized; tenure is a weak/unreliable proxy (r≈.27). Assess by performance. | Bidlake, Aubanel & Voyer 2020; Baltes & Diehl 2018; Peitek/Parnin/Apel 2022 | assessment |
 

@@ -15,6 +15,7 @@ import subprocess
 import sys
 import tempfile
 import time
+from functools import partial
 from pathlib import Path
 
 try:
@@ -44,6 +45,13 @@ def _limit_resources(mem_mb: int, cpu_s: int) -> None:
     resource.setrlimit(resource.RLIMIT_CPU, (cpu_s, cpu_s))
 
 
+def _as_text(value: bytes | str | None) -> str:
+    """TimeoutExpired may carry undecoded bytes even in text mode (POSIX)."""
+    if isinstance(value, bytes):
+        return value.decode(errors="replace")
+    return value or ""
+
+
 def run_snippet(code: str, *, timeout_s: float = 5.0, mem_mb: int = 256) -> RunResult:
     """Execute `code` as an isolated Python process and capture its output.
 
@@ -56,7 +64,7 @@ def run_snippet(code: str, *, timeout_s: float = 5.0, mem_mb: int = 256) -> RunR
         preexec = None
         if resource is not None:
             cpu_s = max(1, int(timeout_s) + 1)
-            preexec = lambda: _limit_resources(mem_mb, cpu_s)
+            preexec = partial(_limit_resources, mem_mb, cpu_s)
         start = time.monotonic()
         try:
             proc = subprocess.run(
@@ -70,8 +78,8 @@ def run_snippet(code: str, *, timeout_s: float = 5.0, mem_mb: int = 256) -> RunR
         except subprocess.TimeoutExpired as exc:
             return RunResult(
                 "timeout",
-                exc.stdout or "",
-                exc.stderr or "",
+                _as_text(exc.stdout),
+                _as_text(exc.stderr),
                 None,
                 time.monotonic() - start,
             )

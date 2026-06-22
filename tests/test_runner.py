@@ -46,3 +46,21 @@ def test_memory_limit_triggers_error():
     # ~1 GiB allocation under a 128 MB cap should fail (MemoryError / nonzero exit).
     r = run_snippet("x = bytearray(1024 * 1024 * 1024)\n", mem_mb=128, timeout_s=5.0)
     assert r.status == "error"
+
+
+def test_timeout_with_partial_output():
+    # Snippet prints before spinning -> exercises the bytes-decode path on POSIX.
+    r = run_snippet(
+        "import sys; print('partial', flush=True)\nwhile True: pass\n",
+        timeout_s=1.0,
+    )
+    assert r.status == "timeout"
+    assert isinstance(r.stdout, str)   # decoded, not bytes
+    assert "partial" in r.stdout
+    r.to_json()  # must not raise
+
+
+def test_duration_s_is_positive():
+    r = run_snippet("pass")
+    assert isinstance(r.duration_s, float)
+    assert 0.0 < r.duration_s < 5.0

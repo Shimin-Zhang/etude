@@ -159,16 +159,17 @@ python <skill-dir>/runtime/python/runner.py <script.py>
 ```
 
 Prints a single-line JSON object matching `RunResult` fields. The skill-relative path
-is key: resolve `runner.py` against the directory containing `SKILL.md`, not the
-learner's working directory. From `SKILL.md`:
+is key: resolve `runtime/python/runner.py` relative to this skill's own directory (the
+folder containing `SKILL.md`), not the learner's working directory.
 
-> *"Resolve `runtime/python/runner.py` against THIS skill's own directory (the folder
-> containing this SKILL.md), not the learner's working directory."*
-
-Example if the skill is installed at `~/.claude/skills/programming-mastery/`:
+Examples (same file, two install locations):
 
 ```bash
+# installed under ~/.claude/skills/
 python ~/.claude/skills/programming-mastery/runtime/python/runner.py snippet.py
+
+# from a repo checkout (cwd = repo root)
+python programming-mastery/runtime/python/runner.py snippet.py
 ```
 
 **Security note.** The runner is a robustness sandbox (timeout + address-space/CPU
@@ -202,10 +203,13 @@ Step 4 for the hard-stop rule).**
 
 **Step 4 — Coach runs the snippet to obtain ground truth.**
 
-The coach writes `snippet.py` with the above code, then runs:
+The coach writes `snippet.py` with the above code, then runs (adjust the path to
+match the skill's install location — see §2 above):
 
 ```bash
-python ~/.claude/skills/programming-mastery/runtime/python/runner.py snippet.py
+# installed:  python ~/.claude/skills/programming-mastery/runtime/python/runner.py snippet.py
+# repo root:  python programming-mastery/runtime/python/runner.py snippet.py
+python <skill-dir>/runtime/python/runner.py snippet.py
 ```
 
 Runner output (JSON on stdout):
@@ -346,17 +350,28 @@ demonstrated ceiling.
 - Did the learner fail on retry? (ceiling found; hold here and scaffold the setup per
   `coaching-loop.md` Step 7)
 
-**Escalation mechanics.** At Frontier, the coach picks a drill that presses *one
-step* past the last comfortable success along one parameter axis. Not two steps —
-one. Escalating too fast collapses to failure; escalating too slowly loses the
-desirable-difficulty benefit (`evidence-base.md` → desirable difficulties).
+**Escalation mechanics — what "one step" means (precise definition).**
 
-Example escalation path in module A1 (notional machine):
+- **Advanced** = one non-trivial mechanism exercised in isolation.
+- **Frontier-N** = N escalation increments beyond Advanced, where **each increment
+  adds exactly one** new interacting mechanism OR pushes one parameter-space dimension
+  up one notch (deeper call stack, larger data shape, an additional evaluation-order
+  wrinkle, etc.). A drill combining Advanced with 2 extra interacting mechanisms is
+  Frontier-2.
+- The learner's **current Frontier-N** is the highest N they have passed; that is
+  their tracked ceiling.
 
-1. Advanced ceiling: mutable default argument (one function call).
-2. Frontier +1: mutable default argument + aliasing across two function calls.
-3. Frontier +2: mutable default + aliasing + closure capture in the same snippet.
-4. Frontier +3: the above, but with a decorator that wraps the function.
+Not two increments at once — one. Escalating too fast collapses to failure;
+escalating too slowly loses the desirable-difficulty benefit
+(`evidence-base.md` → desirable difficulties).
+
+Example escalation path in module A1 (notional machine), starting from the Advanced
+ceiling of "one non-trivial mechanism in isolation":
+
+1. Advanced ceiling: mutable default argument exercised in isolation (one call).
+2. Frontier-1 (+1 increment): mutable default argument + aliasing across two calls.
+3. Frontier-2 (+1 increment): mutable default + aliasing + closure capture in the same snippet.
+4. Frontier-3 (+1 increment): the above, but with a decorator wrapping the function.
 
 **Tracking.** Record the frontier level in the learner's tracker as:
 `Frontier-N` where N is the step above Advanced. Example: `A1: Frontier-2`.

@@ -29,11 +29,17 @@ one in play.
 ## Grading executable drills
 
 Obtain ground truth by **running the code** — never by predicting output.
-Resolve the runner against **this skill's own directory** (where this SKILL.md
-lives), not the learner's working directory. Example:
+Resolve `runtime/python/runner.py` relative to **this skill's own directory**
+(the folder where this SKILL.md lives), not the learner's working directory.
+
+Examples (same file, two install locations):
 
 ```
+# installed under ~/.claude/skills/
 python ~/.claude/skills/programming-mastery/runtime/python/runner.py snippet.py
+
+# from a repo checkout (cwd = repo root)
+python programming-mastery/runtime/python/runner.py snippet.py
 ```
 
 ## Module index

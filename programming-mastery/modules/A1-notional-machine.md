@@ -344,20 +344,33 @@ presses **one step** past their last comfortable success along a single paramete
 (`drill-generation.md` §5). Escalating two steps collapses to failure; escalating none
 loses the desirable-difficulty benefit.
 
-Escalation directions beyond Advanced for A1:
+**What "one step" means here** (per `drill-generation.md` §5):
+- **Advanced** = one non-trivial mechanism exercised in isolation.
+- **Frontier-N** = N increments beyond Advanced; each increment adds exactly one new
+  interacting mechanism OR pushes one parameter-space dimension up one notch.
+- The learner's current Frontier-N is the highest N they have passed.
 
-1. **Compose mechanisms.** Mutable default + aliasing across two calls → + a closure
-   capturing the shared object → + a decorator wrapping the function (the §5 escalation
-   path in `drill-generation.md`). Each `+` is one Frontier step.
-2. **Deeper call stacks.** Mutual recursion; an accumulator passed *down* the stack vs.
-   combined *on the way up*; tracing the frame-by-frame state of a tree recursion;
-   reasoning about the recursion-limit boundary.
+Escalation directions beyond Advanced for A1, with step counts:
+
+1. **Compose mechanisms** (the canonical path from `drill-generation.md` §5):
+   - Frontier-1: mutable default argument + aliasing across two calls (Advanced + 1 extra mechanism).
+   - Frontier-2: mutable default + aliasing + closure capture in the same snippet (+ 1 more).
+   - Frontier-3: the above + a decorator wrapping the function (+ 1 more).
+   Each additional interacting mechanism is exactly one Frontier increment.
+
+2. **Deeper call stacks** (push the call-stack parameter dimension): mutual recursion;
+   an accumulator passed *down* the stack vs. combined *on the way up*; tracing the
+   frame-by-frame state of a tree recursion; reasoning about the recursion-limit boundary.
+   Each of these is one increment over whichever mechanism they are layered on.
+
 3. **Lazy evaluation.** Chained generators (`map` over a `filter` over a generator);
    `itertools` pipelines; the interaction of generator state with `tee`; the difference
    between a generator object and a generator *factory*.
+
 4. **Evaluation order at the edges.** Order of side effects across function arguments;
    comprehension scoping (the loop variable does **not** leak out of a comprehension in
    Python 3); operator-overloaded `__iadd__` / `__radd__` dispatch.
+
 5. **Interleavings → hand off to A4.** Once the *single-threaded* notional machine is
    solid, the natural escalation is the **concurrent** notional machine — multiple
    instruction streams, interleavings, happens-before, and nondeterminism. That is a

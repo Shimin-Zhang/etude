@@ -30,13 +30,17 @@ Advanced drill? The tier names are fixed curriculum-wide:
 | **Frontier** | At or past the learner's demonstrated ceiling | None: go straight to the problem |
 
 Each module spec translates these into *module-specific* criteria. For example, in
-module A1 (notional machine / execution model):
+module A1 (notional machine / execution model) *(illustrative only — authoritative
+tier definitions are in the module's §5a)*:
 
-- **Foundations** — single variable, one assignment, predict the final value.
-- **Working** — a loop with a running accumulator; trace the state across three
-  iterations.
-- **Advanced** — a function call with mutable default argument; predict both the
-  return value and the side effect on subsequent calls.
+- **Foundations** — single mechanism on a familiar surface: one assignment or a loop
+  with a running accumulator; predict the final value(s) / output.
+- **Working** — intent and execution diverge: aliasing vs. rebinding, a mutable
+  default argument, a late-binding closure, or an early `return`; predict output
+  *and* name the state change.
+- **Advanced** — a function call with two or more combined mechanisms (e.g., mutable
+  default + aliasing, or augmented assignment on a mutable in a tuple); predict both
+  the output/status and explain why.
 - **Frontier** — see §5 (Frontier escalation).
 
 ### 1b. Parameter space

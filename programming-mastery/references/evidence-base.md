@@ -59,6 +59,34 @@ addressed directly in teaching rather than left to osmosis.
   *Journal of Educational Computing Research*, 2(1), 57–73. *(Origin of the
   "notional machine" framing; emphasizes mechanistic models of the machine.)*
 
+**Novice execution-model misconceptions** — the module also cites these three
+peer-reviewed sources on the *specific* conceptual errors learners hold about
+execution; they ground the common-error catalog in module A1 §5c:
+
+- Pea, R. D. (1986). Language-independent conceptual "bugs" in novice programming.
+  *Journal of Educational Computing Research*, 2(1), 25–36.
+  doi:10.2190/689T-1R2A-X4W4-29J2. `[Verified]` — Identifies three classes of
+  persistent, language-independent conceptual bugs — *intentionality* (attributing
+  goals/foresight to the machine), *parallelism* (expecting simultaneous execution),
+  and *egocentrism* (assuming the machine shares the programmer's context) — rooted
+  in a unifying "superbug": the belief that a hidden interpreting mind lives inside
+  the language. Confirmed against the primary source; peer-reviewed empirical work
+  with novices from primary-school to college age.
+- Kaczmarczyk, L. C., Petrick, E. R., East, J. P., & Herman, G. L. (2010).
+  Identifying student misconceptions of programming. *Proceedings of the 41st ACM
+  Technical Symposium on Computer Science Education (SIGCSE '10)*, 107–111.
+  doi:10.1145/1734263.1734299. `[Verified]` — Formal interview study revealing four
+  distinct misconception themes in core CS1 topics, including persistent memory-model
+  and data-assignment errors. Voted #1 paper in SIGCSE's 50-year history. Confirmed
+  against ACM DL and multiple secondary sources.
+- Qian, Y., & Lehman, J. (2017). Students' misconceptions and other difficulties in
+  introductory programming: A literature review. *ACM Transactions on Computing
+  Education*, 18(1), Article 1, 1–24. doi:10.1145/3077618. `[Verified]` — Systematic
+  literature review synthesizing misconceptions across syntactic, conceptual, and
+  strategic knowledge in introductory programming; identifies patterns across many
+  studies and implications for instruction. Confirmed against ACM DL; peer-reviewed
+  literature review in a top CS-education venue.
+
 → Drives module **A1** (notional machine / execution model). Implication: teach the
 execution model as a first-class objective; have the learner *simulate* state
 transitions rather than read for intent.
@@ -450,6 +478,17 @@ Recorded for transparency and to keep future authors honest.
   argues the notional machine should be an explicit learning objective. ✓
 - **du Boulay 1986** — confirmed: *J. Educational Computing Research* 2(1), 57–73;
   origin of the notional-machine framing. ✓
+- **Pea 1986** — confirmed: *J. Educational Computing Research* 2(1), 25–36,
+  doi:10.2190/689T-1R2A-X4W4-29J2; "superbug" framing (hidden-mind belief as root
+  of intentionality/parallelism/egocentrism bugs); confirmed via SAGE/journals.sagepub
+  and ERIC EJ331846. ✓
+- **Kaczmarczyk, Petrick, East & Herman 2010** — confirmed: SIGCSE '10, pp. 107–111,
+  doi:10.1145/1734263.1734299; four-theme interview study of CS1 misconceptions;
+  confirmed via ACM DL and Illinois/NJIT institutional records; voted #1 SIGCSE paper
+  in 50-year history. ✓
+- **Qian & Lehman 2017** — confirmed: ACM TOCE 18(1), Article 1, pp. 1–24,
+  doi:10.1145/3077618; literature review of misconceptions in introductory
+  programming; confirmed via ACM DL. ✓
 - **McKeithen et al. 1981** — confirmed: on *ordered* programs experts recalled ~3× more
   than novices (≈18 vs 6 lines); on *scrambled* code the groups converged toward
   near-parity (a small expert residual remains). ✓

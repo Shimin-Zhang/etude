@@ -79,7 +79,39 @@ other people. It is a baseline snapshot and a router.
   module's **Baseline (date / score)** plus seed entries in **Recurring errors**. That row
   *is* the measurement instrument; Part 3 re-runs against it.
 
-### 1.3 The tasks
+### 1.3 Partial-knowledge routing boundary (general principle)
+
+When scoring the learner's *process* on any entry task, the answer often falls between
+"no idea" and "fully correct." Apply this three-way rule, which holds across all
+modules:
+
+| What the learner produces | Route to |
+|---|---|
+| **Names the right mechanism but inverts its semantics or timing** — e.g., says "closures capture by value / at definition" when the correct model is "by reference / at call time"; or says "the default is re-evaluated each call" when it is evaluated once at definition time. | **Working** — the learner has a partial model that needs correcting, not built from scratch. |
+| **No correct mechanism named; cannot engage the state model at all** — vague intent-reading ("it just adds things up"), a blank, or a mechanism that belongs to a different language/paradigm with no relevant contact with the right idea. | **Foundations** — the mental model needs to be built. |
+| **Correct semantics AND can articulate the state model** — names the right mechanism and its direction/timing correctly, even if the final prediction is arithmetically off. | **Advanced** (or Working if only one mechanism demonstrated) — promote per the per-module rubric. |
+
+**Why the middle case routes to Working, not Foundations:** a learner who can name the
+right mechanism (even inverted) has built a partial schema. Correct-direction teaching is
+faster and more effective than schema-building from zero; the Working tier's drills are
+designed for exactly this correction. Sending a partial-knowledge learner to Foundations
+wastes both time and motivation.
+
+**A1 as the worked example.** On the late-binding closure drill (`make_adders` → prints
+`12 12 12`), a learner who predicts `10 11 12` and says "each lambda captures the loop
+variable's *current value* when the lambda is *defined*" has the mechanism right
+(closure captures the variable) but the timing inverted (definition-time snapshot vs.
+call-time read) → **Working**. A learner who says "the loop adds 0, 1, 2 to 10" and
+cannot name closures at all → **Foundations**. A learner who predicts `12 12 12` and
+explains that all three lambdas share the same variable `i`, read at call time after the
+loop ends → **Advanced**.
+
+This boundary applies to every skill's entry rubric; the per-module rubrics in Part 2
+instantiate it with module-specific mechanism names.
+
+---
+
+### 1.4 The tasks
 
 Each task below gives its **shape** (what to generate), **what's scored** (process +
 product), and **how it routes** (which rubric in Part 2 decides the tier). Two or three
@@ -335,7 +367,7 @@ the printed example verbatim, so the battery can be re-run later with held-out i
 
 ---
 
-### 1.4 Reporting the result to the learner
+### 1.5 Reporting the result to the learner
 
 After the battery (or the spine), the coach reports per skill:
 

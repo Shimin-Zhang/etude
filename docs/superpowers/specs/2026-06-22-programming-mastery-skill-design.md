@@ -232,3 +232,18 @@ No validated absolute measure of expertise exists, so we measure **within-learne
 5. Build by track: rest of A (A2–A4) → B (B1–B3) → C (C1–C3) → D (D1–D4) → E (E1–E3) → F (F1–F3).
 6. `references/authoring-new-modules.md` — extract the template from how the modules were actually built.
 7. Smoke-test: a full coached session on A1, including live code execution for ground truth and a Frontier escalation.
+
+## 12. AI-era impact priority (2026–27, research-informed)
+
+A five-angle subagent research pass (productivity RCTs, practitioner commentary, code-quality data, agentic-role analysis, deskilling/learning studies) converged on one shift: **as agents draft most code, developer value moves from *writing* code to *verifying* code they didn't write.** All five angles independently ranked the same cluster highest.
+
+**Highest-impact cluster — the "verification" modules:**
+- **E3 Code review** — the apex skill; where the measured bottleneck moved (Faros telemetry: review time +91%, PR volume +98%; DORA 2025: "AI doesn't replace code review; it makes it more critical").
+- **F1 Metacognition & calibration** — the upstream gate and the single best-evidenced finding (METR RCT: experienced devs 19% slower while feeling 20% faster; Fernandes et al. 2025: more AI-literate users were *more* overconfident).
+- **A2/A3 Code reading & tracing** — the verified foundation review stands on, and what atrophies first (Anthropic RCT, N=52: −17% on later unaided comprehension/debugging).
+- **B3 Testing & specifying correctness** — the automated arm of verification (Veracode 2025: 45% of AI-generated code carried vulnerabilities; NUS/Google CS-ed consensus: precise specification + verification is "arguably the most durable technical skill a graduate can possess").
+- Supporting: **C1/C2 systematic debugging & stack traces**, **E1/E2 large-codebase comprehension & architectural judgment**.
+
+**Decision:** v1 build order stays **track-based** (§11) for dependency/pedagogy reasons (A1 remains the reference implementation; reading precedes review). This cluster is flagged as the **priority for real-world impact** — it should steer sequencing latitude within the plan, and the entry assessment should surface these modules prominently to newcomers.
+
+**Evidence caveats:** the productivity *direction* is contested (METR is revising its slowdown finding after late-2025/2026 data showed an ~18% speedup); much "AI degrades quality" data is vendor-sourced (GitClear was independently rebutted); the RCTs (METR, Anthropic, Stanford CCS'23) are the load-bearing evidence; coding-specific *causal* evidence is thin and small-N. Treat this as priority-steering, not proof — consistent with the §2 evidence-honesty stance.

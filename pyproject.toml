@@ -1,0 +1,10 @@
+[project]
+name = "programming-mastery"
+version = "0.1.0"
+description = "Evidence-based programming-skills coaching skill"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+pythonpath = ["programming-mastery/runtime/python", "tools"]
+testpaths = ["tests"]
+addopts = "-q"

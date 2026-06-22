@@ -1,7 +1,7 @@
 # Programming Mastery — Design Spec (v1)
 
 - **Date:** 2026-06-22
-- **Status:** Approved in principle; revised to a 20-module sampleable "buffet" with dynamic drill generation, track-stable IDs, staff ceiling (pending final spec review)
+- **Status:** Approved in principle; revised to a 20-module sampleable "buffet" with dynamic drill generation, track-stable IDs, staff ceiling; integrated learning-science **delivery techniques** borrowed from Cat Hicks' *Learning Opportunities* project (§13) (pending final spec review)
 - **Working dir:** `/home/shimin/agents/programming-agent`
 - **Skill name (provisional):** `programming-mastery`
 
@@ -34,6 +34,21 @@ The differentiator: the curriculum is built on fact-checked findings and openly 
 | **Experts plan top-down before coding**: form an *abstract, complete representation* of the solution; novices translate step-by-step. (Teach plan-before-code/decompose — NOT the refuted "plan catalog.") | Adelson 1985; Soloway; Hoc 1977; Rist 1991; Koubek & Salvendy 1988/91 | B1 |
 | **Reading → tracing → writing**: tracing and "explain in plain English" track with code-*writing* ability — a developmental hierarchy. | BRACElet — Lister et al., Lopez et al. 2008 | A3, B2 |
 | **Years ≠ expertise**: expertise is poorly operationalized; tenure is a weak/unreliable proxy (r≈.27). Assess by performance. | Bidlake, Aubanel & Voyer 2020; Baltes & Diehl 2018; Peitek/Parnin/Apel 2022 | assessment |
+
+### Learning-science delivery techniques (the instructional pillar)
+
+The findings above are about *what* separates experts. This pillar is about *how to teach* — well-established cognitive/educational-psychology results that govern drill delivery (§7) and generation. Surfaced via Cat Hicks' *Learning Opportunities* project (§13), whose independently-assembled bibliography overlaps ours (Hermans, Storey, Ericsson, Tankelevitch) — cross-validating the foundation. These are robust in general learning science; programming-specific transfer carries the same open-question caveat as the rest.
+
+| Technique | Finding | Applied in |
+|---|---|---|
+| **Generation & testing effect** | Producing/retrieving beats passively consuming, even when immediate performance is worse. | generate-before-reveal; teach-it-back (Roediger & Karpicke 2006; Murphy 2023) |
+| **Pre-testing** | Attempting *before* being shown helps encoding even when the attempt fails — shown for novice programmers. | predict/sketch before reveal (Giebl 2021) |
+| **Spacing** | Distributed practice beats massing; feels worse, works better. | spaced review + retrieval check-ins (Kornell 2009; Kang 2016) |
+| **Worked examples + expertise reversal** | Worked examples help novices but become redundant load for experts. | fade examples by tier (Sweller & Cooper 1985; Kalyuga 2007) |
+| **Desirable difficulties** | Conditions that slow short-term performance improve long-term retention/transfer. | don't simplify under struggle; scaffold the *setup* (Bjork) |
+| **Learning ≠ performance** | Immediate performance is a poor index of durable learning. | weight delayed re-assessment + transfer over same-session streaks (Soderstrom & Bjork 2015) |
+| **Illusions of fluency/effort** | Fluent reading and felt effort are mistaken for knowledge. | feeds F1 calibration (Bjork; Dunlosky 2013) |
+| **Metacognition** | Monitoring/calibration is trainable and predicts outcomes independent of ability. | F1; reflection prompts (Tankelevitch 2024; Dunlosky 2013) |
 
 ### Folklore we explicitly reject
 
@@ -71,9 +86,9 @@ Nearly all the *verified* evidence is drawn from **novices** in intro courses, m
 
 ## 3. Scope (v1)
 
-**In:** 20 modules across 6 tracks (all tier-labeled by evidence); per-skill tiered routing **plus an unbounded Frontier band**; entry assessment that *recommends* (never gates); free sampling; **dynamic drill generation** anchored by golden exemplars; **executable ground truth** for verifiable drills via a Python runtime; coaching loop; progress/mastery tracker; a module-authoring template for extensibility.
+**In:** 20 modules across 6 tracks (all tier-labeled by evidence); per-skill tiered routing **plus an unbounded Frontier band**; entry assessment that *recommends* (never gates); free sampling; **dynamic drill generation** anchored by golden exemplars; **executable ground truth** for verifiable drills via a Python runtime; coaching loop with the **learning-science delivery disciplines** (pause/no-spoiler, pre-test, fading scaffolding, direct feedback); progress/mastery tracker; an **optional affective self-report layer** (validated open-access measures, §13); a module-authoring template for extensibility.
 
-**Out (future):** non-Python execution runtimes; spaced-repetition scheduling engine; team/cohort dashboards; IDE integration; an empirical transfer-validation study; backlog modules (technical communication & design docs; mentoring/teaching; type-driven reasoning; distributed-execution as its own module).
+**Out (future):** non-Python execution runtimes; spaced-repetition scheduling engine; team/cohort dashboards; IDE integration; an empirical transfer-validation study; backlog modules (technical communication & design docs; mentoring/teaching; type-driven reasoning; distributed-execution as its own module). Also future: an **in-flow delivery mode** — run exercises on the learner's *own* just-written/committed code (with an optional post-commit trigger hook), as an alternative to the synthetic-drill "gym" (the *Learning Opportunities* model, §13).
 
 ## 4. Architecture (coach skill + module buffet + generation engine)
 
@@ -135,7 +150,7 @@ Fixed structure so one coaching protocol drives all modules:
 1. **Evidence basis** — finding + citation + tier badge `[Verified]` / `[Verified-adjacent]` / `[Practitioner-canon]`. A module may carry a *mixed* badge when concept and method differ in status (e.g., C1, C3: verified comprehension model, canon-supported method).
 2. **Soft prerequisites** — recommended prior modules, explicitly *not required* (buffet model). Each module is usable standalone.
 3. **The mental model** — the core concept in plain language.
-4. **Worked example** — an expert demonstration to imitate.
+4. **Worked example** — an expert demonstration to imitate. *Fade by tier* (worked-example effect + expertise reversal, Kalyuga 2007): full at Foundations, progressively removed at Advanced/Frontier where shown steps become redundant cognitive load.
 5. **Drill-generation spec** — tier definitions (the difficulty model), parameter space to vary, the **common-error catalog** to target, and the **grading mode**: *executable ground truth* (coach runs the code) vs *rubric + exemplars* (judgment skills). Points into `exemplars/`.
 6. **Frontier band** — how difficulty escalates *beyond* Advanced (which knobs increase; what staff-level looks like).
 7. **Mastery rubric** — the *observable performance* bar to pass at each named tier.
@@ -169,16 +184,29 @@ A sampleable buffet. Tracks map onto the build lifecycle so the generative front
 | F2 | Designing your own practice *(meta-capstone)* | F | `[Verified]` meta | What well-designed practice actually is: quality + immediate feedback + individualized targeting, NOT hour-dosing. Revisited throughout. |
 | F3 | Learning new languages & frameworks fast | F | `[Verified-adjacent]` | Transfer: acquire a new notional machine + idioms quickly; map the unfamiliar onto what you know. |
 
+**E1 reuses the `orient` methodology** (Mullarkey/Hicks, §13): expert codebase orientation is *strategic, not exhaustive* — README → directory-tree-as-table-of-contents → entry points → **tests-as-executable-spec** → core modules → **git-churn-as-core-finder** — plus the *gateway artifact* concept (Dagenais 2010). That procedure + its bibliography (Spinellis *Code Reading*, Hermans, Storey, Spolsky) drops nearly whole into E1.
+
 ## 7. The coaching loop (`references/coaching-loop.md`, run by `SKILL.md`)
 
-1. **Locate** — read progress file; pick the learner's chosen module + tier (or run entry assessment / recommend if new).
-2. **Teach** — present concept + worked example (skip if already mastered).
+1. **Locate** — read progress file; pick the learner's chosen module + tier (or run entry assessment / recommend if new). For returning learners, open with a **retrieval check-in** ("what do you remember about …?") before new work.
+2. **Teach** — present concept + **tier-faded** worked example (skip if already mastered).
 3. **Generate** — produce a *fresh* drill at the learner's tier from the module's generation spec + golden exemplars; in the **Frontier band**, escalate difficulty against the demonstrated ceiling.
-4. **Attempt** — learner does the drill (the trace / explanation / plan / code / bug hypothesis / review).
+4. **Attempt (pre-test, then hard stop)** — pose the drill, then **end the message and wait**. Generate no answer, hints, "think about…", suggested responses, or teaching content until the learner replies. Prefer *generate-before-reveal* (predict/sketch first). The learner produces the trace / explanation / plan / code / bug hypothesis / review.
 5. **Diagnose** — obtain ground truth: **run the code** for executable drills; apply **rubric + exemplars** for judgment drills. Name the *specific* gap, not just pass/fail.
-6. **Feedback** — targeted, specific, immediate; expert solution side-by-side. (The active ingredient the DP research supports.)
-7. **Adapt** — pass → harder drill / next skill / push into Frontier; fail → easier drill / re-teach sub-skill. Update progress file.
+6. **Feedback (direct, no false credit)** — targeted, specific, immediate; expert solution side-by-side. Be blunt about what's wrong — don't soften errors into ambiguity, and don't credit the learner with insight they didn't actually express. Wrong predictions are high-value data.
+7. **Adapt (fade the scaffold, not the challenge)** — pass → harder drill / next skill / push into Frontier; struggling → move *up* the scaffolding ladder (a more specific *question setup*), never hint at the answer or simplify the challenge itself. Update progress file.
 8. **Spaced review** — periodically re-surface a mastered skill to check retention.
+
+### Delivery disciplines (borrowed learning science — see §13)
+
+These govern *how* the coach runs every step; they counteract the LLM's default to spoil its own questions and the learner's pull toward fluent passivity:
+- **Pause for input / no-spoiler:** after posing a question, the message ends. No answer, hints, leading "consider…", suggested responses, or italic clues — only a content-free nudge ("best guess — wrong is useful data") or an escape hatch.
+- **Pre-test before reveal:** have the learner attempt before being shown, even if it fails (Giebl 2021).
+- **Fading scaffolding:** adjust the difficulty of the *question setup*, never the answer ("open file X line N" → "find where we handle X" → "where would you look?"). Stuck → move *up* (more specific setup), don't hint.
+- **Direct error feedback:** blunt about wrong, then explore the gap; clear feedback is what makes errors productive.
+- **Desirable difficulty:** don't simplify because the learner struggles — productive struggle is the mechanism.
+- **Prefer directing to files over showing code:** have the learner *locate* code themselves (stronger memory traces); show snippets only when short or when they're blocked.
+- **Session restraint:** don't nag — cap unsolicited drill offers and stop when the learner declines.
 
 ## 8. Tiering, assessment & measurement
 
@@ -190,6 +218,9 @@ No validated absolute measure of expertise exists, so we measure **within-learne
 - **Progress tracker** (`progress-template.md`): per-skill table — track, tier, baseline, drills passed, current Frontier level, and a running list of **recurring error patterns** (the diagnostic gold).
 - **Headline delta:** because drills are generated fresh, held-out re-assessment is free — re-run the entry battery later with new items at fixed checkpoints; baseline-vs-now = measurable improvement. Per-module transfer tasks track real-code transfer.
 - **Honesty:** the skill states out loud that this is within-person progress on defined skills, not a certified expertise grade.
+- **Learning ≠ performance** (Soderstrom & Bjork 2015): same-session drill pass-rate is a weak index of *durable* learning — so weight **delayed** re-assessment and real-code transfer over hot streaks; treat a same-session run as provisional.
+- **Optional affective layer** (self-report; validated, open-access; Hicks et al., CC-BY-SA — §13): track **Learning Culture**, **AI Skill Threat**, and **Coding Self-Efficacy** pre/post as a *complement* to performance measures — never as routing or gating.
+- **Reporting guardrails** (when the skill summarizes progress): descriptive over inferential; report variance/spread alongside any average; no causal overclaiming from pre/post (no control group); never confabulate norms ("a 3.2 means moderate…"). Small-n deltas start conversations, they don't render verdicts.
 
 ### Progress tracker format (markdown, agent-parseable)
 
@@ -206,6 +237,8 @@ No validated absolute measure of expertise exists, so we measure **within-learne
 - **Executable ground truth** — for verifiable drills the coach *runs the code*; it never grades against a guessed answer key.
 - **Generation anchored by golden exemplars** — drills are generated for volume/freshness but calibrated by curated gold standards; not free-form.
 - **Feedback-rich, individualized practice** — quality and specificity over volume; no hour-quotas.
+- **Pause for input (no-spoiler)** — after posing a drill the coach stops; it never answers its own questions or leaks hints. The single most important delivery discipline.
+- **Desirable difficulty over fluency** — keep productive struggle; fade the scaffold's *setup*, not the challenge; optimize durable learning over the feeling of fluency.
 - **Unbounded depth** — the Frontier band means the ceiling fits staff engineers.
 - **Transfer to real code** — every module ends on the learner's actual codebase.
 - **No aptitude gatekeeping** — skill is trainable; reject the "two humps" framing explicitly.
@@ -225,11 +258,11 @@ No validated absolute measure of expertise exists, so we measure **within-learne
 
 ## 11. v1 build order
 
-1. `references/evidence-base.md` (grounding — everything cites it).
-2. `SKILL.md` + `references/coaching-loop.md` + `references/assessment.md` + `references/drill-generation.md` (the engine, incl. executable-ground-truth + self-check + Frontier escalation).
+1. `references/evidence-base.md` (grounding — everything cites it; incl. the §2 learning-science instructional pillar).
+2. `SKILL.md` + `references/coaching-loop.md` + `references/assessment.md` + `references/drill-generation.md` (the engine, incl. executable-ground-truth + self-check + Frontier escalation; **`coaching-loop.md` encodes the §7 delivery disciplines**; **`drill-generation.md` encodes the exercise-format catalog**, §13).
 3. `runtime/python/` sandboxed runner + `progress-template.md` (execution + measurement instruments).
 4. **Module A1 (notional machine) end-to-end** — mental model + worked example + generation spec + golden exemplars + executable grading + Frontier band. The reference implementation of the module model.
-5. Build by track: rest of A (A2–A4) → B (B1–B3) → C (C1–C3) → D (D1–D4) → E (E1–E3) → F (F1–F3).
+5. Build by track: rest of A (A2–A4) → B (B1–B3) → C (C1–C3) → D (D1–D4) → E (E1–E3) → F (F1–F3). (E1 adapts the `orient` procedure + bibliography, §13; F1 leans on the §2 instructional pillar.)
 6. `references/authoring-new-modules.md` — extract the template from how the modules were actually built.
 7. Smoke-test: a full coached session on A1, including live code execution for ground truth and a Frontier escalation.
 
@@ -247,3 +280,23 @@ A five-angle subagent research pass (productivity RCTs, practitioner commentary,
 **Decision:** v1 build order stays **track-based** (§11) for dependency/pedagogy reasons (A1 remains the reference implementation; reading precedes review). This cluster is flagged as the **priority for real-world impact** — it should steer sequencing latitude within the plan, and the entry assessment should surface these modules prominently to newcomers.
 
 **Evidence caveats:** the productivity *direction* is contested (METR is revising its slowdown finding after late-2025/2026 data showed an ~18% speedup); much "AI degrades quality" data is vendor-sourced (GitClear was independently rebutted); the RCTs (METR, Anthropic, Stanford CCS'23) are the load-bearing evidence; coding-specific *causal* evidence is thin and small-N. Treat this as priority-steering, not proof — consistent with the §2 evidence-honesty stance.
+
+## 13. Borrowed techniques & attribution
+
+**Source:** Cat Hicks' *Learning Opportunities* skill + Michael Mullarkey's *orient* companion — `github.com/DrCatHicks/learning-opportunities`. A sibling project by a psychological scientist who studies developer learning/thriving. It is **complementary**: it specializes in *delivery discipline*, *affective measurement*, and *codebase orientation*, where our project specializes in the skill taxonomy + the generation/executable-grading engine.
+
+**License & attribution.** Their principles/skill are **CC-BY-4.0**; their survey measures are **CC-BY-SA-4.0** (share-alike). Findings, citations, and techniques aren't copyrightable and we use them with credit. If we ship their *survey items* or *principle prose* verbatim, we attribute (Hicks, Lee, Foster-Marks / Ramsey) and CC-BY-SA binds that derivative. Credit **Cat Hicks** for the delivery techniques and measures; **Michael Mullarkey** for `orient`.
+
+**What we borrowed and where it lives:**
+
+| # | Borrowed | Folded into |
+|---|---|---|
+| 1 | **Delivery disciplines** — pause/no-spoiler, pre-test, fading scaffolding, direct feedback, desirable difficulty, direct-to-files, session restraint | §7 + `coaching-loop.md`; principle in §9 |
+| 2 | **Exercise-format catalog** — Prediction→Observation→Reflection · Generation→Comparison · Trace-the-path · Debug-this · Teach-it-back · Retrieval check-in · + elaborative interrogation, interleaving, varied-context, concrete→abstract transfer, error analysis, example-problem pairs, completion prompts | `drill-generation.md` (formats are orthogonal to modules — any generator may draw from them) |
+| 3 | **Learning-science instructional pillar** (citations: Roediger & Karpicke, Giebl, Kornell/Kang, Sweller, Kalyuga, Bjork, Soderstrom & Bjork, Dunlosky, Murphy, Tankelevitch) | §2 instructional-pillar table + `evidence-base.md` |
+| 4 | **Worked-example fading / expertise reversal** | §5 module anatomy (point 4) + tier model |
+| 5 | **`orient` codebase-orientation procedure + bibliography** (Spinellis, Hermans, Storey, Spolsky, Dagenais "gateway artifact") | E1 module (near-complete) |
+| 6 | **Measurement**: learning≠performance caveat; optional affective measures (DTS Learning Culture, AI Skill Threat, Coding Self-Efficacy); AI-analysis statistical guardrails | §8 + `assessment.md` |
+| 7 | *(future)* **In-flow delivery mode** + post-commit trigger hook (their PostToolUse model) | §3 Out (future) |
+
+**Cross-validation:** their independently-assembled bibliography overlaps ours (Hermans, Storey, Ericsson, Tankelevitch), strengthening confidence in the shared foundation. Their delivery emphasis also *reinforces* our highest-evidence AI-era priority (§12): F1 calibration and the verification cluster are exactly what their fluency/effort-illusion and metacognition work targets.

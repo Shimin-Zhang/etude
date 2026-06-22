@@ -101,7 +101,7 @@ coach should say so gracefully if asked for one.
 | `references/drill-generation.md` | Drill mechanics: generation-spec format, exercise-format catalog, executable ground truth, self-check pass, Frontier escalation rules. |
 | `references/assessment.md` | Entry assessment + per-module mastery rubrics + measurement protocol + optional affective self-report layer. |
 | `progress-template.md` | Per-learner tracker template; copy to `programming-mastery-progress.md` in the learner's working dir. |
-| `modules/<ID>-*.md` | Per-skill teaching content (mental model, worked example, generation spec, exemplar pointers, mastery rubric). *Authored by track in later plans; today only the engine and A1 exist.* |
+| `modules/<ID>-*.md` | Per-skill teaching content (mental model, worked example, generation spec, exemplar pointers, mastery rubric). *Authored by track in later plans; today only the engine exists — no module files yet.* |
 | `exemplars/<ID>/<tier>/` | Golden drill exemplars (~3 per tier) used for few-shot calibration, worked examples, and offline fallback. |
 
 ## Honesty rules

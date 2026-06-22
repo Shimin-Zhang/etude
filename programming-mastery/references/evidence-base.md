@@ -390,6 +390,17 @@ defined skills, not a certified expertise score.*
 
 ---
 
+## AI-era impact (2026–27) `[Verified-adjacent]`
+
+As coding agents draft most first-draft code, developer value shifts from *writing* code to *verifying* code one didn't write. A five-angle research synthesis (productivity RCTs, practitioner commentary, code-quality data, agentic-role analysis, deskilling studies) converged on a "verification cluster" that grounds the AI-era priority for modules **E3, F1, A2/A3, B3** (see spec §12).
+
+- **Calibration gap** (→ F1): in a randomized controlled trial, experienced developers were **~19% slower** with AI tools while *believing* they were ~20% faster (METR 2025); and more AI-literate users were *more* overconfident (Fernandes et al. 2025, *Computers in Human Behavior*). The single best-evidenced AI-era finding.
+- **Review is the new bottleneck** (→ E3): when agents generate code, human review load rises sharply (Faros telemetry; DORA 2025 — "AI doesn't replace code review; it makes it more critical"). Code review has prior empirical grounding (Bacchelli & Bird 2013, ICSE — *Expectations, Outcomes, and Challenges of Modern Code Review*).
+- **Comprehension atrophies first** (→ A2/A3): AI-assisted engineers scored **~17% lower** on later *unaided* comprehension/debugging (Anthropic RCT, N=52).
+- **AI code carries defects** (→ B3): ~45% of AI-generated samples carried security vulnerabilities (Veracode 2025); a NUS/Google CS-education consensus calls precise specification + verification "arguably the most durable technical skill a graduate can possess."
+
+**Honesty caveats.** The productivity *direction* is contested (METR is revising its finding after late-2025/2026 data showed an ~18% *speedup*); much "AI degrades quality" data is vendor-sourced (GitClear was independently rebutted); the **RCTs** (METR, Anthropic, Stanford CCS'23) are the load-bearing evidence; coding-specific *causal* evidence is thin and small-N. Treat this as **priority-steering, not proof** — hence the `[Verified-adjacent]` badge.
+
 ## Reading spine (book canon)
 
 The curriculum's book-length sources. These are **not** all peer-reviewed evidence;

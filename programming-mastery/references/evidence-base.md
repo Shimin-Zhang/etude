@@ -195,16 +195,67 @@ a large share of variance in writing performance.
 
 - Lopez, M., Whalley, J., Robbins, P., & Lister, R. (2008). Relationships between
   reading, tracing and writing skills in introductory programming. *ICER '08*, 101–112.
-  *(Tracing + explaining explained ~46% of variance in code-writing; R² ≈ 0.66 across
-  the skills.)*
+  doi:10.1145/1404520.1404531. `[Verified]` — The keystone result: **in combination,
+  tracing of iterative code and "explain in plain English" accounted for ~46% of the
+  variance in code-writing** ability (R² = 0.46). *(Precision note: the headline figure
+  is the **46% combined variance**. Each skill alone is much weaker — iterative-tracing
+  ≈15% (R²=0.15) and explaining ≈7% (R²=0.07) of writing variance. The "R² ≈ 0.66"
+  previously cited here was **wrong**: 0.66 is not the model variance but the bivariate
+  **correlation r ≈ 0.63** (r = 0.6267) between iterative-tracing and writing — a
+  different quantity. Corrected to cite only the verified 46% combined-variance figure;
+  see [Research notes](#research-notes).)*
+
+**The intermediate skills (trace + explain-in-plain-English) and the SOLO
+relational/multistructural distinction** — these peer-reviewed BRACElet/SOLO sources
+ground module **A3** (tracing & explain-in-plain-English) and were verified during A3's
+authoring:
+
+- Lister, R., Fidge, C., & Teague, D. (2009). Further evidence of a relationship between
+  explaining, tracing and writing skills in introductory programming. *ITiCSE '09*,
+  161–165. doi:10.1145/1595496.1562930. `[Verified]` — Replication at a new institution,
+  in **Python**, with non-parametric analysis: students who cannot trace usually cannot
+  explain, and good writers have *usually* acquired both. The authors are explicit that
+  this supports a **soft prerequisite *tendency*, not a strict gate** (one student wrote
+  well despite failing both) — which is why A1/A2 are soft, not hard, prerequisites.
+- Whalley, J. L., Lister, R., Thompson, E., Clear, T., Robbins, P., Kumar, P. K. A., &
+  Prasad, C. (2006). An Australasian study of reading and comprehension skills in novice
+  programmers, using the Bloom and SOLO taxonomies. *ACE 2006*, CRPIT Vol. 52, 243–252.
+  `[Verified]` — Source of the **relational vs. multistructural** EiPE contrast: a
+  *relational* answer states the code's **purpose**; a *multistructural* one is a
+  *line-by-line* retelling. The novice signature is line-by-line narration.
+- Lister, R., Simon, B., Thompson, E., Whalley, J. L., & Prasad, C. (2006). Not seeing
+  the forest for the trees: novice programmers and the SOLO taxonomy. *ITiCSE '06*,
+  118–122. doi:10.1145/1140124.1140157. `[Verified]` — Documents that experienced readers
+  summarize at the relational (purpose) level while many novices retell line-by-line;
+  the empirical root of A3's explain-in-plain-English half.
+- Vainio, V., & Sajaniemi, J. (2007). Factors in novice programmers' poor tracing skills.
+  *ITiCSE '07*, 236–240. doi:10.1145/1268784.1268853. `[Verified]` — Identifies
+  **single-value tracing** (tracking only a variable's *latest* value rather than its
+  history) as a documented novice tracing failure; grounds A3's common-error catalog.
+- Sirkiä, T., & Sorva, J. (2012). Exploring programming misconceptions: an analysis of
+  student mistakes in visual program simulation exercises. *Koli Calling '12*, 19–28.
+  doi:10.1145/2401796.2401799. `[Verified]` — Function-call/parameter simulation and
+  recursion-frame tracing appear as documented mistake clusters; grounds A3's
+  call-tree/stack tracing errors.
+- Cunningham, K., Blanchard, S., Ericson, B., & Guzdial, M. (2017). Using tracing and
+  sketching to solve programming problems: replicating and extending an analysis of what
+  students draw. *ICER '17*, 164–172. doi:10.1145/3105726.3106190. `[Verified]` —
+  Replicating the Leeds Working Group (Lister et al. 2004): students who **sketch a
+  trace** succeed more, and sketches that **track multiple values of the same variable
+  over time** correlate most with correct answers — the empirical case for A3's
+  "externalize state, don't hold it in your head" discipline.
 - Lister, R., et al. — the BRACElet project (multi-institution, 2004 onward); see also
   "A closer look at tracing, explaining and code writing skills in the novice
-  programmer" and "Further evidence of a relationship between explaining, tracing and
-  writing skills" (SIGCSE Bulletin, 2009).
+  programmer" (Venables, Tan & Lister, *ICER '09*) and the Leeds Working Group (Lister
+  et al. 2004, *ITiCSE-WGR '04*, "A multi-national study of reading and tracing skills in
+  novice programmers").
 
 → Drives modules **A3** (tracing / explain-in-plain-English) and **B2** (writing).
 Implication: build writing on a foundation of tracing and explaining; do not jump
-learners straight to composition.
+learners straight to composition. **Caveat (per the standing rule):** BRACElet
+establishes a **correlational hierarchy and a soft prerequisite ordering**, *not* a proof
+that tracing *causes* writing ability — Lister, Fidge & Teague (2009) are explicit it is
+a tendency with exceptions.
 
 ### 7. Years of experience ≠ expertise — tenure is a weak proxy `[Verified]`
 
@@ -429,6 +480,175 @@ As coding agents draft most first-draft code, developer value shifts from *writi
 
 **Honesty caveats.** The productivity *direction* is contested (METR is revising its finding after late-2025/2026 data showed an ~18% *speedup*); much "AI degrades quality" data is vendor-sourced (GitClear was independently rebutted); the **RCTs** (METR, Anthropic, Stanford CCS'23) are the load-bearing evidence; coding-specific *causal* evidence is thin and small-N. Treat this as **priority-steering, not proof** — hence the `[Verified-adjacent]` badge.
 
+---
+
+## Module-specific & craft sources
+
+Grounding for the verification-cluster modules whose citations are **not** covered by the
+Findings above. Each was verified against primary sources during that module's authoring and
+is **badged here at its true tier** — the honesty rule holds: never present canon as verified
+science, and never inflate contested empirical evidence. (A3's tracing/EiPE sources live with
+[Finding 6](#6-reading--tracing--writing-is-a-developmental-hierarchy-verified); A2's chunking
+sources with [Findings 2](#2-expertise-is-better-representation-experts-chunk-code-into-larger-semantic-units-verified)
+& [3](#3-beacons-and-programming-plans-are-real-cues-experts-exploit-verified).)
+
+### Testing & specifying correctness (module B3)
+
+**B3 is mixed-status by design** (its file badge is `[Practitioner-canon]`): the test-*design*
+techniques are craft, and the *only* empirical layer — TDD — is **genuinely contested**. The
+coach must keep the two apart and must **not** sell TDD as proven.
+
+**B3a — Test-design & oracle/property canon `[Practitioner-canon]` (methods/surveys).**
+Respected, widely taught craft and peer-reviewed *survey/methods* papers — **not**
+effectiveness experiments. The coach says: *"respected practice — not a verified research
+finding."*
+
+- Myers, G. J. (1979). *The Art of Software Testing.* Wiley (later eds. 2004/2011 with
+  Sandler, Badgett, Thomas). Canonical source for **equivalence partitioning** and
+  **boundary-value analysis**, and the argument that **exhaustive testing is generally
+  impossible** — so the problem is choosing the cases most likely to find errors. Craft
+  doctrine, not a replicated result.
+- Dijkstra, E. W. (1969/1970). *Notes on Structured Programming* (EWD249); published as the
+  lead essay in Dahl, Dijkstra & Hoare, *Structured Programming* (Academic Press, 1972).
+  Source of the aphorism, verbatim: **"Program testing can be used to show the presence of
+  bugs, but never to show their absence!"** A *logical* observation by a major figure, not
+  data; provenance exactly verifiable (EWD249).
+- Barr, E. T., Harman, M., McMinn, P., Shahbaz, M., & Yoo, S. (2015). The oracle problem in
+  software testing: a survey. *IEEE TSE*, 41(5), 507–525. doi:10.1109/TSE.2014.2372785.
+  Peer-reviewed **survey**. Defines the **test oracle** and names the **oracle problem**
+  (deciding the correct behavior for an input is itself hard) — the motivation for properties.
+- Claessen, K., & Hughes, J. (2000). QuickCheck: a lightweight tool for random testing of
+  Haskell programs. *ICFP '00*, 268–279. doi:10.1145/351240.351266. Origin of
+  **property-based testing**. SIGPLAN Most-Influential-Paper award. A **tool/methods** paper,
+  **not** an empirical effectiveness study. *(Verified caveat: the original 2000 paper does
+  NOT have built-in automatic shrinking — minimization of failing cases came later in the
+  QuickCheck/Hedgehog/Hypothesis lineage.)*
+- Hughes, J. (2019). How to specify it! A guide to writing properties of pure functions.
+  *Trends in Functional Programming (TFP 2019)*, LNCS 12053, 58–83.
+  doi:10.1007/978-3-030-47147-7_4. Practitioner tutorial: a taxonomy of property kinds
+  (invariants, postconditions, metamorphic/algebraic relations, model-based). Canon/tutorial,
+  not science.
+- Chen, T. Y., Cheung, S. C., & Yiu, S. M. (1998). *Metamorphic testing: a new approach for
+  generating next test cases.* Tech. Report HKUST-CS98-01, Hong Kong Univ. of Science &
+  Technology. Origin of **metamorphic testing** (checking relations between *multiple*
+  executions that hold even when the exact correct output is unknown). **⚠ Flag:** this is a
+  **technical report**; its content here is sourced **via the Segura et al. 2016 survey**
+  below, not from a directly-pinned TR copy — cite as origin-of-record, lean on the survey
+  for the substance.
+- Segura, S., Fraser, G., Sánchez, A. B., & Ruiz-Cortés, A. (2016). A survey on metamorphic
+  testing. *IEEE TSE*, 42(9), 805–824. doi:10.1109/TSE.2016.2532875. Peer-reviewed **survey**;
+  the load-bearing source for the metamorphic-relation material (and the verifying record for
+  Chen et al. 1998).
+
+**B3b — The TDD evidence layer `[Some empirical]` — MIXED / contested.** This is the only
+part of B3 with replicated-ish empirical weight, and it is **honestly mixed**. **Do NOT inflate
+to "TDD works."** The honest line: *specify behavior and work in small, steady steps; the
+test-first ceremony is not what the evidence credits, and high coverage does not prove
+correctness.*
+
+- Rafique, Y., & Mišić, V. B. (2013). The effects of test-driven development on external
+  quality and productivity: a meta-analysis. *IEEE TSE*, 39(6), 835–856.
+  doi:10.1109/TSE.2012.28. Meta-analysis of 27 studies: TDD has **"a small positive effect on
+  quality but little to no discernible effect on productivity,"** with the productivity drop
+  tracking how much *more* the TDD group tested — a **confound**, not a clean TDD effect.
+- Turhan, B., Layman, L., Diep, M., Erdogmus, H., & Shull, F. (2010). How effective is
+  test-driven development? Ch. 12 in *Making Software* (O'Reilly, eds. Oram & Wilson),
+  207–217. Narrative systematic review (22 reports / 32 trials): **"the evidence is not
+  undisputedly consistent regarding TDD's effects on any of the measures,"** and the apparent
+  external-quality benefit **"disappears after filtering out the less rigorous studies."**
+- Fucci, D., Erdogmus, H., Turhan, B., Oivo, M., & Juristo, N. (2017). A dissection of the
+  test-driven development process: does it really matter to test-first or to test-last?
+  *IEEE TSE*, 43(7), 597–614. doi:10.1109/TSE.2016.2616877. **"Sequencing, the order in which
+  test and production code are written, had no important influence"** — what helped was
+  **granularity and uniformity** (small, steady steps). *The test-first ritual that defines
+  TDD is not the active ingredient.* (Companion replication: Fucci et al. (2016), *An external
+  replication … multi-site blind analysis*, *ESEM '16*, doi:10.1145/2961111.2962592 — TDD
+  effects largely **not** significant.)
+- Inozemtseva, L., & Holmes, R. (2014). Coverage is not strongly correlated with test suite
+  effectiveness. *ICSE '14*, 435–445. doi:10.1145/2568225.2568271 (ACM Distinguished Paper;
+  ICSE most-influential-paper N-10 in 2024). Once you **control for the number of test cases**,
+  coverage is only *low-to-moderately* correlated with fault detection, and stronger coverage
+  criteria don't help much: **high coverage ≠ good tests.** The empirical backstop for B3's
+  "coverage is not correctness" anti-pattern. *(Page range 435–445 confirmed against ACM DL —
+  the author's "not-fully-pinned" flag is now resolved.)*
+
+### Metacognition & calibration (module F1)
+
+**F1's general calibration science is `[Verified]` *as general cognitive/educational
+psychology*; the programming-specific transfer is `[Verified-adjacent]`** (extrapolated, per
+the tier table). It was established on **general-knowledge questions, text comprehension, and
+classroom learning — not professional code** — so the coach says: *"solid learning science in
+general; the programming-specific evidence is thinner."* (The AI-era amplification — METR 2025
+/ Fernandes 2025 / Tankelevitch 2024 — is already in [AI-era impact](#ai-era-impact-202627-verified-adjacent)
+and the [instructional pillar](#learning-science-instructional-pillar).)
+
+- Flavell, J. H. (1979). Metacognition and cognitive monitoring: a new area of
+  cognitive–developmental inquiry. *American Psychologist*, 34(10), 906–911.
+  doi:10.1037/0003-066X.34.10.906. `[Verified]` (general) — Established **metacognition** and
+  split it into **metacognitive knowledge** and **monitoring/experiences**; the *monitoring*
+  half (flagging confusion *early*) is what F1 drills.
+- Nelson, T. O., & Narens, L. (1990). Metamemory: a theoretical framework and some new
+  findings. *Psychology of Learning and Motivation*, 26, 125–173. `[Verified]` (general) — The
+  **monitoring ↔ control** framework (meta-level model of an object-level; information read
+  *up* as monitoring, decisions sent *down* as control). F1's mechanism *is* this loop run
+  against an external truth source (the runner).
+- Lichtenstein, S., & Fischhoff, B. (1977). Do those who know more also know more about how
+  much they know? *Organizational Behavior and Human Performance*, 20(2), 159–183.
+  `[Verified]` (general) — Foundational calibration work: **systematic overconfidence** and the
+  **hard–easy effect** (accuracy falls faster than confidence as tasks get harder, so
+  overconfidence *grows* where being wrong costs most).
+- Kruger, J., & Dunning, D. (1999). Unskilled and unaware of it. *Journal of Personality and
+  Social Psychology*, 77(6), 1121–1134. doi:10.1037/0022-3514.77.6.1121. `[Verified]` (general)
+  — The **dual burden**: the skills to *do* a task overlap the skills to *judge* whether you
+  did it well, so the least skilled are least able to detect they're wrong — the rationale for
+  measuring calibration **separately** from correctness. *(Note: the strongest popular
+  *misreadings* of this paper are contested; F1 uses only the robust core — monitoring accuracy
+  is itself a skill that can lag raw ability.)*
+- Koriat, A., & Bjork, R. A. (2005). Illusions of competence in monitoring one's knowledge
+  during study. *Journal of Experimental Psychology: LMC*, 31(2), 187–194.
+  doi:10.1037/0278-7393.31.2.187. `[Verified]` (general) — The **fluency/foresight illusion**:
+  information that is *present and easy to process* feels *known*. Programming cognate: code
+  that **reads** smoothly feels **understood** — until you must predict its output or modify it.
+- Dunlosky, J., & Rawson, K. A. (2012). Overconfidence produces underachievement: inaccurate
+  self-evaluations undermine students' learning and retention. *Learning and Instruction*,
+  22(4), 271–280. doi:10.1016/j.learninstruc.2011.08.003. `[Verified]` (general) —
+  **Overconfidence causally degrades learning**: students who overestimate their understanding
+  **stop studying too early**. Engineering cognate: overconfidence makes you **stop verifying
+  too early** and ship the bug.
+
+→ Drives module **F1** (metacognition & calibration). **Programming-specific transfer is
+`[Verified-adjacent]`, not `[Verified]`:** that calibration training *causally improves
+software work* is extrapolation, honestly labeled; the transfer task is the individual-level test.
+
+### Code review craft (module E3)
+
+Extends the **review-as-bottleneck** AI-era line and the empirical anchor **Bacchelli & Bird
+2013** (already in [AI-era impact](#ai-era-impact-202627-verified-adjacent)). These are the
+**craft `[Practitioner-canon]`** sources for the *how* of effective review — vetted against the
+named sources during authoring; respected, widely taught wisdom, **not** measured causation.
+(Weinberg's *Psychology of Computer Programming* — egoless review — is already on the
+[reading spine](#reading-spine-book-canon).)
+
+- Google. *eng-practices: The Standard of Code Review* (Google Engineering Practices
+  Documentation). `[Practitioner-canon]` — "The primary purpose of code review is to make sure
+  that the overall **code health** of the codebase is improving over time"; **"there is no such
+  thing as 'perfect' code — only better code"**; "**technical facts and data overrule opinions
+  and personal preferences**"; comment **on the code, not the developer**; prefix non-blocking
+  polish with "**Nit:**". Reviewers look at **design, functionality, complexity, tests, naming,
+  comments, style** — design first. <https://google.github.io/eng-practices/review/reviewer/standard.html>
+- Greiler, M. — code-review practice and research (e.g. *Code Reviewing in the Trenches*,
+  *IEEE Software*, 2018, with Bird, Bacchelli & others; and her *Code Review Pyramid* /
+  Microsoft developer-productivity work). `[Practitioner-canon]` — practical guidance on
+  review *effectiveness*, reviewer guidelines, and prioritizing high-value feedback over
+  mechanical nits; the craft companion to the Bacchelli & Bird empirical core.
+
+→ Drives module **E3** (code review). The *concept* leans on Bacchelli & Bird 2013 (one
+in-depth field study — direction, not replicated causation); the *how* is `[Practitioner-canon]`
+(Google + Greiler + Weinberg). The AI-era priority that makes review the apex verification
+skill is `[Verified-adjacent]` — priority-steering, not proof.
+
+---
+
 ## Reading spine (book canon)
 
 The curriculum's book-length sources. These are **not** all peer-reviewed evidence;
@@ -499,8 +719,14 @@ Recorded for transparency and to keep future authors honest.
 - **Brooks 1983 / Pennington 1987 / von Mayrhauser & Vans 1995** — confirmed:
   top-down (beacons), bottom-up (program model), and mode-switching metamodel
   respectively. ✓
-- **Lopez et al. 2008 (BRACElet)** — confirmed: ICER '08; tracing + explaining
-  explained ~46% of code-writing variance (R² ≈ 0.66 across skills). ✓
+- **Lopez et al. 2008 (BRACElet)** — confirmed: ICER '08, doi:10.1145/1404520.1404531;
+  tracing + explaining together explained **~46% of code-writing variance (R² = 0.46)**;
+  each alone is weaker (iterative-tracing ≈15%, explaining ≈7%). **Correction:** an
+  earlier draft cited "R² ≈ 0.66 across the skills" — that was wrong; 0.66 is not the
+  model variance but the **bivariate correlation r ≈ 0.63** (r = 0.6267) between
+  iterative-tracing and writing in the same paper, a different quantity. Now cites only
+  the verified **46% combined-variance** figure (and labels r ≈ 0.63 as the correlation,
+  not variance). ✓
 - **Bidlake, Aubanel & Voyer 2020 / Baltes & Diehl 2018 / Peitek et al. 2022** —
   confirmed: experience-in-years is a weak/inconsistent proxy for measured expertise. ✓
 - **Bornat 2014 retraction + Retraction Watch 2014** — confirmed with direct quotes;
@@ -548,6 +774,16 @@ Recorded for transparency and to keep future authors honest.
    with the ~21% delayed-retention result is *Psychological Science* 17:249–255. Both are
    genuine 2006 Roediger & Karpicke papers; I cite the review as primary and note the
    companion. No error — precision only.
+5. **Lopez et al. 2008 (Finding 6) — "R² ≈ 0.66" was a real error, now corrected.** An
+   earlier draft of Finding 6 (and its Research-notes line) stated "R² ≈ 0.66 across the
+   skills." That **conflated two different quantities**: the verified headline is that
+   tracing + explaining **together** explain **~46% of code-writing variance (R² = 0.46)**;
+   0.66 is instead the bivariate **correlation r ≈ 0.63** (r = 0.6267) between
+   iterative-tracing and writing. Re-verified against the primary source (each skill
+   alone: tracing ≈15%, explaining ≈7%). Finding 6 now cites **only** the 46%
+   combined-variance figure and, where the correlation is mentioned, labels it r ≈ 0.63 —
+   not variance. The A3 module already flagged this discrepancy during its authoring; this
+   resolves it at the source.
 
 **Could not fully confirm (flagged honestly):**
 

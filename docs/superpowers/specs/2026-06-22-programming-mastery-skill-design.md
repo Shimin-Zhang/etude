@@ -131,7 +131,7 @@ programming-mastery/                  # built here; installed to ~/.claude/skill
     F2-designing-your-practice.md       # meta-capstone; revisited throughout
     F3-learning-new-languages-and-frameworks.md
   exemplars/
-    <module-id>/<tier>/               # ~3 golden drills/tier: generator few-shot calibration + worked examples + offline fallback
+    <module-id>/<tier>.md            # ~3 golden drills/tier (one file per tier): generator few-shot calibration + worked examples + offline fallback
   runtime/
     python/                           # sandboxed runner so the coach can EXECUTE code drills for ground truth (v1: Python)
   progress-template.md                # per-learner mastery tracker (the measurement instrument)

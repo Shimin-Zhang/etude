@@ -47,7 +47,7 @@ def validate_module(path: Path) -> list[Problem]:
             f"filename '{path.name}' must match <TrackID>-<kebab>.md "
             "(e.g. A1-notional-machine.md)",
         ))
-    text = path.read_text()
+    text = path.read_text(encoding="utf-8")
     if not text.lstrip().startswith("# "):
         problems.append(Problem(str(path), "missing a top-level '# ' title"))
     headings = "\n".join(_headings(text))

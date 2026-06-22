@@ -2,7 +2,7 @@
 import textwrap
 from pathlib import Path
 
-from validate_modules import validate_module
+from validate_modules import validate_dir, validate_module
 
 VALID = textwrap.dedent("""\
     # A1 — Notional Machine
@@ -70,3 +70,11 @@ def test_missing_title_is_flagged(tmp_path):
     body = VALID.replace("# A1 — Notional Machine\n", "")
     problems = validate_module(_write(tmp_path, body=body))
     assert any("title" in p.message for p in problems)
+
+
+def test_validate_dir_aggregates_problems(tmp_path):
+    _write(tmp_path, name="A1-notional-machine.md")        # valid
+    _write(tmp_path, name="bad.md", body="# Title\n")      # invalid (bad name + missing sections/badge)
+    problems = validate_dir(tmp_path)
+    assert len(problems) > 0
+    assert all("bad.md" in p.path for p in problems)

@@ -25,6 +25,7 @@ REQUIRED_SECTIONS = [
     "transfer task",
 ]
 VALID_BADGES = ["[Verified]", "[Verified-adjacent]", "[Practitioner-canon]"]
+# Track letters are A-F (six tracks). If a track G+ is added, widen this pattern.
 FILENAME_RE = re.compile(r"^[A-F][1-9][0-9]?-[a-z0-9-]+\.md$")
 HEADING_RE = re.compile(r"^#{1,6}\s+(.*)$", re.MULTILINE)
 

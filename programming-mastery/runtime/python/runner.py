@@ -60,7 +60,7 @@ def run_snippet(code: str, *, timeout_s: float = 5.0, mem_mb: int = 256) -> RunR
     """
     with tempfile.TemporaryDirectory() as tmp:
         script = Path(tmp) / "snippet.py"
-        script.write_text(code)
+        script.write_text(code, encoding="utf-8")
         preexec = None
         if resource is not None:
             cpu_s = max(1, int(timeout_s) + 1)
@@ -97,7 +97,11 @@ def main(argv: list[str]) -> int:
     if len(argv) != 2:
         print("usage: runner.py <script.py>", file=sys.stderr)
         return 2
-    code = Path(argv[1]).read_text()
+    try:
+        code = Path(argv[1]).read_text(encoding="utf-8")
+    except FileNotFoundError:
+        print(f"no such file: {argv[1]}", file=sys.stderr)
+        return 2
     print(run_snippet(code).to_json())
     return 0
 

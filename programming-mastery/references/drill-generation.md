@@ -121,6 +121,12 @@ The protocol is:
 3. Parse the `RunResult` JSON.
 4. Grade the learner's prediction against `stdout` (and/or `status`, if the drill is
    about whether an error occurs).
+5. **Show your work to the learner.** Paste the exact snippet you ran and its exact
+   output (`stdout` and/or `status`) into your reply — do not leave the run inside the
+   tool/runner call, which harnesses like Claude Code collapse by default and the learner
+   cannot see. An unseen run reads as a guessed answer key; surfacing it preserves the
+   "never guess" guarantee (`coaching-loop.md` → Surface ground truth — no hidden
+   grading).
 
 ### Runner API
 

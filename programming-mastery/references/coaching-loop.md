@@ -74,6 +74,14 @@ Obtain ground truth:
 - **Judgment drills:** apply the rubric and exemplars specified in
   `drill-generation.md`.
 
+**Surface the ground truth in your message.** When you grade by running code, paste the
+*exact* snippet you ran and its *exact* output (the relevant `stdout` / `status`) into
+your reply. Do not leave the run inside the tool/runner call: most harnesses (Claude Code
+included) collapse tool calls by default, so the learner cannot see them. A grade whose
+evidence the learner cannot see is indistinguishable from a guess — which breaks the
+executable-ground-truth honesty rule (`SKILL.md` → Honesty rules). See "Surface ground
+truth" in the Delivery Disciplines below.
+
 Name the *specific* gap — exactly what understanding or skill is missing. Do not
 reduce this to pass/fail. "Incorrect" is not a diagnosis; "treated the slice as a
 copy rather than a view into the original array" is.
@@ -230,6 +238,16 @@ that makes dynamic testing work. (`evidence-base.md` → instructional pillar, d
 testing.)
 
 State the error, show the correct answer, connect it to the underlying concept. Done.
+
+### Surface ground truth — no hidden grading
+
+When the grade comes from running code, the learner must be able to *see* the evidence.
+Paste the exact snippet you executed and its exact output into the message — never leave
+it only in the runner/tool call. Most harnesses (Claude Code included) collapse tool
+calls by default, so anything that lives only there is invisible to the learner. An
+unseen run is indistinguishable from a guessed answer key, and "grade by running, never
+guess" is a core honesty rule (`SKILL.md`; `drill-generation.md` §2). If the snippet is
+long, show the minimal reduction you actually ran, plus its output.
 
 ### Desirable difficulty — do not simplify under struggle
 

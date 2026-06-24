@@ -311,10 +311,50 @@ the printed example verbatim, so the battery can be re-run later with held-out i
   single piece of evidence in the trace points there?"**
 - **Scored.** *Product:* did they locate the right frame / line? *Process:* did they read
   the trace as **a window into the execution model** — distinguishing the exception *site*
-  from the exception *cause*, reading the call chain top-to-bottom, naming the exception
+  from the exception *cause*, reading the call chain in stack order (most recent call last —
+  bottom-up to the deepest frame that is the learner's code), naming the exception
   class meaningfully — or treat it as opaque noise and guess?
 - **Routes via** the C2 rubric. Offered alongside C1 because it is cheap to administer and
   high-impact in AI-era verification work (spec §12). `[Practitioner-canon]`.
+
+---
+
+#### C3 — Production & concurrency debugging
+
+- **Shape.** Give **either** (a) a small concurrency snippet with a planted race — a non-atomic
+  shared counter, a check-then-act/cache-fill, or a use-before-init across two threads — **or** (b)
+  a short emitted-evidence trail (a structured log or a metric series) from an intermittent
+  production failure the learner *cannot reproduce locally*. For (a), ask the learner to **describe
+  an interleaving that breaks the intended invariant, classify it (atomicity vs order vs deadlock),
+  and say what the right-unit fix is**. For (b), ask them to **localize the fault from the evidence,
+  name the one discriminating signal (vs the loudest decoy), and give their top falsifiable
+  hypothesis**.
+- **Scored.** *Product:* did they find a breaking interleaving / localize the fault (the breaking
+  schedule is confirmed by **running a forced interleaving**, not guessed)? *Process — the primary
+  signal:* did they **classify** the race correctly (atomicity = a region meant to be indivisible
+  was interleaved; order = A-before-B got flipped) and **target the fix at the right unit** — make
+  the *whole* read-modify-write atomic, add a *happens-before edge* for order, or fix *lock
+  ordering* — rather than reflexively "add a lock"? Did they reason about **non-reproducibility**
+  and the **heisenbug** (a green run is one sample; adding a print can hide the bug)? A learner who
+  finds the race but **mis-classifies** it, or who "fixes" it by adding a lock without saying what
+  must be atomic, scores **lower on process** even if the symptom is right (sending the fix the
+  wrong way is the central C3 failure — Lu et al. 2008, Finding 2/9).
+- **Routes via** the C3 rubric (Part 2; module §7). Cannot describe a breaking interleaving / can't
+  engage the schedule at all → **Foundations**; describes the interleaving and names the
+  read-modify-write window but mis-classifies atomicity-vs-order, or reaches straight for a lock →
+  **Working** (partial model to correct); classifies correctly, targets the right-unit fix, and
+  reasons about non-reproducibility/heisenbug unaided → **Advanced**.
+- **Caveats baked in.** **(1) Grading is hybrid and explicitly softer than A1/C1's executable
+  grading** — the coach can *run a forced schedule to prove a bug exists* and that a fix closes
+  *that* schedule, but **cannot enumerate all interleavings**, so a passing forced repro after a
+  fix is *necessary, not sufficient*; the coach says so out loud and grades the reasoning about the
+  schedule space, not just an output (module §5d; `drill-generation.md` §3). **(2)** A *naive*
+  (unforced) racy snippet may print the *correct* answer on a given run — that is the heisenbug,
+  **not** a refutation; the coach demonstrates the bug via the **forced** interleaving and states
+  that the green naive run is one sample, not a proof. **(3)** The concurrency taxonomy
+  (`[Verified-adjacent]`, Lu et al. 2008) is a **descriptive characterization**, not proven
+  pedagogy, and the production-debugging method is **`[Practitioner-canon]`**, not verified science
+  — the coach never presents either above its badge.
 
 ---
 

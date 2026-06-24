@@ -647,6 +647,151 @@ in-depth field study — direction, not replicated causation); the *how* is `[Pr
 (Google + Greiler + Weinberg). The AI-era priority that makes review the apex verification
 skill is `[Verified-adjacent]` — priority-steering, not proof.
 
+### Systematic debugging method (module C1)
+
+Extends **Finding 4** (comprehension is active and hypothesis-driven — Brooks 1983; Pennington 1987; von Mayrhauser & Vans 1995; already in [Verified findings](#4-comprehension-is-active-and-hypothesis-driven-verified)), which supplies C1's **`[Verified]` model half**: debugging proceeds as *predict → check*, not reading until it "clicks." The sources below are the **craft `[Practitioner-canon]`** anchors for C1's **method half** — the disciplined loop, bisection, and input minimization — vetted against the named primary sources during authoring; respected, widely taught wisdom, **not** measured causation. (Zeller's *Why Programs Fail* is already on the [reading spine](#reading-spine-book-canon); itemized here for the specific claims C1 cites.)
+
+- Zeller, A. (2009). *Why Programs Fail: A Guide to Systematic Debugging* (2nd ed.). Morgan Kaufmann. ISBN 978-0-12-374515-6. `[Practitioner-canon]` — The **scientific method of debugging**: from a working theory of the program, **generate a hypothesis**, **design an experiment that could falsify it**, run it, fold the result back into the theory, and **repeat until the theory explains the failure**, recorded in an explicit **debugging logbook**. The observe→hypothesize→predict→test loop C1 drills. Craft doctrine, not an effectiveness experiment.
+- Zeller, A., & Hildebrandt, R. (2002). Simplifying and isolating failure-inducing input. *IEEE Transactions on Software Engineering*, 28(2), 183–200. doi:10.1109/32.988498. `[Practitioner-canon]` (algorithm/methods) — **Delta debugging / `ddmin`**: systematically shrink a failing input (or change set) to the **minimal** part that still triggers the failure, and isolate the difference between a passing and a failing run. The basis for C1's **bisection** (over commits) and **input-minimization** drills. A tool/algorithm paper; the famous Mozilla case (896 HTML lines → 1) is an illustration, not a controlled effectiveness study.
+- Agans, D. J. (2002). *Debugging: The 9 Indispensable Rules for Finding Even the Most Elusive Software and Hardware Problems.* AMACOM. ISBN 978-0-8144-7457-0. `[Practitioner-canon]` — The nine rules, verbatim: **Understand the System · Make It Fail · Quit Thinking and Look · Divide and Conquer · Change One Thing at a Time · Keep an Audit Trail · Check the Plug · Get a Fresh View · If You Didn't Fix It, It Ain't Fixed.** Agans is explicitly **observation-first** — his "Quit Thinking and Look" chapter takes its epigraph from Sherlock Holmes's "it is a capital mistake to theorize before one has data" (Conan Doyle, *A Scandal in Bohemia*) — which is why C1 puts *Observe* before *Hypothesize*. War-stories-and-rules craft book, not empirical research.
+
+→ Drives module **C1** (systematic / hypothesis-driven debugging). The *model* is `[Verified]` (Finding 4); the *method* is `[Practitioner-canon]` (above). **Hard honesty bound (already recorded in [Refuted under verification](#refuted-under-verification)):** do **not** claim systematic debugging is *causally* superior to skilled ad-hoc debugging — that exact claim ("systematic control/data-flow tracing causally yields better mental models and fewer errors than as-needed reading") was **refuted**. C1 sells the method as **tractability + falsifiability** (a reliable fallback when intuition stalls, and a guard against the "I think it's fixed" failure), never as a proven performance edge. The AI-era priority placing C1 in the verification cluster (debugging code one didn't write rises as agents draft it; spec §12) is `[Verified-adjacent]` — priority-steering, not proof.
+
+### Reading stack traces & error messages (module C2)
+
+**C2 is mixed-status by design** (its file badge is `[Practitioner-canon]`): the trace-*reading
+technique* is craft, grounded by the **`[Verified]`** principles already in this file —
+[Finding 1](#1-the-notional-machine-is-the-durable-barrier--not-syntax-verified) (a traceback
+*is* the notional machine's call stack made visible) and
+[Finding 4](#4-comprehension-is-active-and-hypothesis-driven-verified) (debugging is
+evidence-driven prediction→check, and the traceback is the cheapest evidence available). The
+coach must keep the two apart: *the four-move reading procedure is respected practice, not a
+controlled finding; what each exception class and chaining line **mean** are documented facts.*
+
+**C2 — Traceback semantics & the read-bottom-up procedure `[Practitioner-canon]` (docs/spec
+facts + craft).** Primary, verifiable sources for *what a traceback is*, *what each built-in
+exception class signals*, and *what the chaining lines mean* — pinned to the Python
+documentation and the language spec; the *reading order* itself is craft consensus, badged
+accordingly. The coach says: *"this is respected practice on a verified foundation — not a
+verified research result of its own."*
+
+- **The Python Tutorial — §8 "Errors and Exceptions"; and the Python Library Reference —
+  "Built-in Exceptions" (docs.python.org).** `[Practitioner-canon]` (documentation, factual).
+  §8.2 describes the traceback verbatim: the error message "contains a stack traceback listing
+  source lines; however, it will not display lines read from standard input." §8.5 "Exception
+  Chaining" documents implicit chaining and the `raise … from` / `from None` forms. The
+  Built-in Exceptions page is the **origin-of-record for what each class signals**
+  (`NameError`, `UnboundLocalError`, `TypeError`, `AttributeError`, `KeyError`, `IndexError`,
+  `ValueError`, `RecursionError`, …) — the grounding for C2's exception-class catalog (§5c).
+  *Verified against docs.python.org/3/tutorial/errors.html (§8.2, §8.5 confirmed) in this
+  pass.*
+- **PEP 3134 — "Exception Chaining and Embedded Tracebacks" (Ka-Ping Yee, 12 May 2005;
+  targets Python 3.0).** `[Practitioner-canon]` (language spec, factual). Defines the two
+  chaining attributes and their rendered banners: **`__context__`** (implicit) →
+  **"During handling of the above exception, another exception occurred"**; **`__cause__`**
+  (explicit `raise … from …`) → **"The above exception was the direct cause of the following
+  exception"**; plus **`__traceback__`**. This is the load-bearing source for C2's
+  "which traceback holds the original cause" Advanced skill. *Verified against
+  peps.python.org/pep-3134 (author, date, target version, both message strings, and the
+  `__context__`/`__cause__`/`raise … from` semantics all confirmed verbatim) in this pass;
+  the two banner strings were independently re-confirmed as live runner output.* **Correction
+  recorded:** an early draft of the C2 module attributed PEP 3134 to "Cannon & Yee" — the
+  actual sole author is **Ka-Ping Yee**; corrected at the source.
+- **The read-bottom-up reading order** — `[Practitioner-canon]` (craft). The verifiable
+  anchor is the Python docs' own header, **"Traceback (most recent call last)"**: by
+  construction the **last** line is the failure (the exception type + message) and the
+  **bottom** frame is where it raised, so the trace is meant to be read bottom-first. The
+  further "walk up to the deepest frame that is *your* code (skip library/stdlib internals)"
+  step is widely-taught practitioner consensus, **not** a measured result — badged as craft,
+  not science. *(No specific book was pinned for this step in this pass; it rests on the
+  verified docs framing plus practitioner consensus, deliberately citing less rather than
+  asserting an unverified page.)*
+
+→ Drives module **C2** (reading stack traces & error messages). The *technique* (bottom line
+first → deepest your-code frame → site-vs-cause → map onto the machine) is
+`[Practitioner-canon]`; the *foundation* it rests on is `[Verified]` (Findings 1 & 4); what
+the exception classes and chaining lines **mean** are documented **facts** (Python docs; PEP
+3134). The **AI-era priority** that makes fast trace-reading part of the verification cluster
+(as agents draft code, the first artifact of a failure is a traceback; spec §12) is
+`[Verified-adjacent]` — priority-steering, not proof. **Research note:** every traceback used
+in C2's worked example and its nine tier exemplars is **real runner output** (Python 3.13),
+independently re-run from scratch during authoring and confirmed byte-for-byte against the
+pasted keys (exception class, frame line numbers, fine-grained caret spans, and the chaining
+banners); the executable grading path means the coach reads the *actual* `stderr`, never a
+guessed one.
+
+### Production & concurrency debugging (module C3)
+
+Extends **Finding 1** (the notional machine) into the *concurrent* setting, and the
+**systematic-debugging** line anchored by Zeller (already on the
+[reading spine](#reading-spine-book-canon): *Why Programs Fail*, "anchors C1 and C3"). C3 is
+**mixed-status** (its file badge is `[Verified-adjacent]`): the concurrency *taxonomy* is a strong
+empirical characterization, and the production-debugging *method* is craft. The coach must keep the
+two apart and must **not** sell the method as verified science.
+
+**C3a — The concurrency-bug taxonomy `[Verified-adjacent]` (empirical characterization).** The
+single best real-world characterization of what concurrency bugs *look like* — strong empirical
+footing, but **descriptive field data**, from C/C++ applications circa 2008, **not** a causal
+learning result and **not** Python. It is `[Verified-adjacent]` because it *extends* the verified
+execution-model finding (Finding 1) into the concurrent setting on solid empirical ground — not
+because the *pedagogy* is proven.
+
+- Lu, S., Park, S., Seo, E., & Zhou, Y. (2008). Learning from mistakes: a comprehensive study on
+  real-world concurrency bug characteristics. *ASPLOS '08* (13th Int'l Conf. on Architectural
+  Support for Programming Languages and Operating Systems), 329–339.
+  doi:10.1145/1346281.1346323. `[Verified-adjacent]` — The first comprehensive real-world
+  concurrency-bug study: **105 randomly selected bugs** from four large mature open-source
+  applications (**MySQL, Apache, Mozilla, OpenOffice**), split into **74 non-deadlock and 31
+  deadlock**. Findings that ground C3 (numbers + wording verified against the primary PDF during
+  authoring): *Finding (1):* "**Most (72 out of 74) of the examined non-deadlock concurrency bugs
+  are covered by two simple patterns: atomicity-violation and order-violation**" (Table 4: 51
+  atomicity, 24 order, 2 other; 3 counted as both). *Definitions (verbatim):* an **atomicity
+  violation** is when "the desired serializability among multiple memory accesses is violated";
+  an **order violation** is when "the desired order between two (groups of) memory accesses is
+  flipped." *Finding (2):* "**A significant number (24 out of 74) ... are order bugs**" — and
+  order bugs "may not be easily expressed via synchronization primitives like locks." *Finding
+  (3):* "**The manifestation of most (101 out of 105) ... involves no more than two threads**"
+  (96%); *Finding (5):* "**Many (66%) ... [involve] concurrent accesses to only one variable**"
+  (34% involve multiple variables). *Finding (9):* "**Three quarters (73%) of the examined
+  non-deadlock bugs are fixed by techniques other than adding/changing locks**". ASPLOS
+  Influential Paper Award 2022. *(Research note: the abstract phrases Finding (1) as "almost all
+  (97%)"; the body's exact count is "72 out of 74" — C3 cites the precise body figure. The
+  canonical proceedings DOI is 10.1145/1346281.1346323; SIGARCH/SIGOPS/SIGPLAN co-prints carry
+  1353534/1353535.1346323. All figures and the two definitions verified against the freely
+  available author PDF.)*
+
+**C3b — Production / observability-driven debugging `[Practitioner-canon]` (method).** Respected,
+widely taught craft for debugging a live system you cannot pause — vetted against the named sources
+during authoring; **not** an effectiveness experiment. The coach says: *"respected practice — not a
+verified research finding."* (Per [Refuted](#refuted-under-verification), that *systematic tracing
+causally* beats skilled as-needed reading was **not** established; the method is taught as
+disciplined practice, exactly as C1's is.)
+
+- Zeller, A. (2009). *Why Programs Fail: A Guide to Systematic Debugging* (2nd ed.). Morgan
+  Kaufmann. ISBN 978-0-12-374515-6. `[Practitioner-canon]` — Already on the
+  [reading spine](#reading-spine-book-canon). Debugging as the **scientific method run against a
+  program**: from an observed failure, form a **hypothesis** about the cause, **predict** a
+  checkable consequence, **observe**, and **refine** — narrowing systematically rather than
+  guessing. C3 stresses the parts that bite at scale: **reproduction** (a failure you cannot
+  reproduce on demand is the hardest case) and reasoning from **recorded** evidence when you cannot
+  re-run at will.
+- Majors, C., Fong-Jones, L., & Miranda, G. (2022). *Observability Engineering: Achieving
+  Production Excellence.* O'Reilly. ISBN 978-1-492-07644-5. `[Practitioner-canon]` — The anchor for
+  the observability-driven stance: in production you **cannot attach a debugger and step** (remote,
+  concurrent, intermittent), so you debug from the **evidence the running system emits** —
+  structured **logs**, **metrics**, distributed **traces** — and the engineering goal is to emit
+  *enough* of the right evidence to ask new questions of past behavior **without shipping code to
+  reproduce it**. *(Verified: 1st-ed. authors Majors, Fong-Jones & Miranda, 2022; the 2nd ed.,
+  2024, adds Austin Parker — C3 cites the 1st edition's author list.)*
+
+→ Drives module **C3** (production & concurrency debugging). The *what* (the atomicity/order
+taxonomy; bugs are small — two threads, one variable; locks aren't the universal fix) leans on Lu
+et al. 2008 (`[Verified-adjacent]` — strong characterization, not proven pedagogy); the *how*
+(hypothesis-driven reasoning under non-reproducibility; reason from emitted evidence) is
+`[Practitioner-canon]` (Zeller + the observability canon). Sibling module **A4 (concurrency mental
+models)** — not yet built — will own the *concurrent notional machine itself* (interleavings,
+happens-before, memory models); C3 uses the slice of that model it needs and references A4 softly.
+
 ---
 
 ## Reading spine (book canon)

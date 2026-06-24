@@ -69,9 +69,9 @@ coach should say so gracefully if asked for one.
 
 | ID | Module | Tier badge | Core idea |
 |---|---|---|---|
-| C1 | Systematic / hypothesis-driven debugging | `[Verified]` + `[Canon]` | Debugging as science: observe → hypothesize → predict → test → narrow (bisection). Not print-spraying. |
+| C1 | Systematic / hypothesis-driven debugging | `[Verified]` model + `[Practitioner-canon]` method | Debugging as science: observe → hypothesize → predict → test → narrow (bisection). Not print-spraying. |
 | C2 | Reading stack traces & error messages | `[Practitioner-canon]` | Decode a trace as a window into the execution model; locate fault from the evidence the runtime gives you. |
-| C3 | Production & concurrency debugging | `[Verified]` + `[Canon]` | Heisenbugs, races, observability-driven debugging, live-system incident reasoning. Extends A1/C1 to systems scale. |
+| C3 | Production & concurrency debugging | `[Verified-adjacent]` + `[Practitioner-canon]` | Heisenbugs, races, observability-driven debugging, live-system incident reasoning. Extends A1/C1 to systems scale. |
 
 ### Track D — Quality & craft `[Practitioner-canon]`
 
@@ -107,7 +107,7 @@ coach should say so gracefully if asked for one.
 | `references/drill-generation.md` | Drill mechanics: generation-spec format, exercise-format catalog, executable ground truth, self-check pass, Frontier escalation rules. |
 | `references/assessment.md` | Entry assessment + per-module mastery rubrics + measurement protocol + optional affective self-report layer. |
 | `progress-template.md` | Per-learner tracker template; copy to `programming-mastery-progress.md` in the learner's working dir. |
-| `modules/<ID>-*.md` | Per-skill teaching content (mental model, worked example, generation spec, exemplar pointers, mastery rubric). *Authored by track in later plans; today only the engine exists — no module files yet.* |
+| `modules/<ID>-*.md` | Per-skill teaching content (mental model, worked example, generation spec, exemplar pointers, mastery rubric). *Authored so far: A1–A3, B3, C1–C3, E3, F1 (9 of 20); the remaining modules are listed in the index above — the coach says so gracefully if asked for one.* |
 | `exemplars/<ID>/<tier>/` | Golden drill exemplars (~3 per tier) used for few-shot calibration, worked examples, and offline fallback. |
 
 ## Honesty rules

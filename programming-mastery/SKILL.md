@@ -78,7 +78,7 @@ coach should say so gracefully if asked for one.
 | ID | Module | Tier badge | Core idea |
 |---|---|---|---|
 | D1 | Managing complexity / abstraction | `[Practitioner-canon]` | Decomposition, abstraction boundaries, deep vs shallow modules. |
-| D2 | Naming | `[Practitioner-canon]` | Names as cheapest documentation; precision, consistency, intent. |
+| D2 | Naming | `[Some empirical]` + `[Practitioner-canon]` | Names as cheapest documentation; precision, consistency, intent. |
 | D3 | Refactoring judgment | `[Practitioner-canon]` | When (and when not) to refactor; behavior-preserving change under test. |
 | D4 | Performance & mechanical sympathy | `[Canon / extrapolation]` | Cost models; what operations actually cost; measure-before-optimize. Extends the notional machine to hardware. |
 
@@ -107,7 +107,7 @@ coach should say so gracefully if asked for one.
 | `references/drill-generation.md` | Drill mechanics: generation-spec format, exercise-format catalog, executable ground truth, self-check pass, Frontier escalation rules. |
 | `references/assessment.md` | Entry assessment + per-module mastery rubrics + measurement protocol + optional affective self-report layer. |
 | `progress-template.md` | Per-learner tracker template; copy to `programming-mastery-progress.md` in the learner's working dir. |
-| `modules/<ID>-*.md` | Per-skill teaching content (mental model, worked example, generation spec, exemplar pointers, mastery rubric). *Authored so far: A1–A3, B3, C1–C3, E3, F1 (9 of 20); the remaining modules are listed in the index above — the coach says so gracefully if asked for one.* |
+| `modules/<ID>-*.md` | Per-skill teaching content (mental model, worked example, generation spec, exemplar pointers, mastery rubric). *Authored so far: A1–A3, B3, C1–C3, D1–D4, E3, F1 (13 of 20); the remaining modules are listed in the index above — the coach says so gracefully if asked for one.* |
 | `exemplars/<ID>/<tier>/` | Golden drill exemplars (~3 per tier) used for few-shot calibration, worked examples, and offline fallback. |
 
 ## Honesty rules

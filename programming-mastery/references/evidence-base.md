@@ -794,6 +794,386 @@ happens-before, memory models); C3 uses the slice of that model it needs and ref
 
 ---
 
+### Managing complexity & abstraction (module D1)
+
+**D1 is `[Practitioner-canon]` by design** (its file badge is `[Practitioner-canon]`): its core
+is a respected practitioner *philosophy* on a foundational design-principle paper, and its only
+contact with empirical literature is a **counterweight** — the famous complexity *metric* is
+weak/contested. The coach must keep these apart and must **never** present the craft as verified
+science or let a metric stand in for "real" complexity. (Ousterhout's *A Philosophy of Software
+Design* is already on the [reading spine](#reading-spine-book-canon) — *"Complexity, deep vs
+shallow modules. Craft anchor for D1–D3"*; itemized here for the specific claims D1 cites.)
+
+**D1a — Complexity & deep-module philosophy `[Practitioner-canon]` (craft).** Respected, widely
+taught design wisdom, vetted against the named source during authoring — **not** an effectiveness
+experiment. The coach says: *"a useful, respected lens — one experienced engineer's philosophy,
+not a measured result."*
+
+- Ousterhout, J. K. (2018; **2nd ed.** July 2021). *A Philosophy of Software Design.* Yaknyam
+  Press. ISBN 978-1-7321022-0-0 (1st ed.); 978-1-7321022-1-7 (2nd ed.). `[Practitioner-canon]` —
+  Source of D1's whole vocabulary, confirmed against the text during authoring: **complexity** is
+  *"anything related to the structure of a software system that makes it hard to understand and
+  modify the system"*; its **two causes** are **dependencies** and **obscurity**; its **three
+  symptoms** are **change amplification**, **cognitive load**, and **unknown-unknowns** (the
+  *worst*). The central craft move: **deep modules** (powerful functionality behind a *simple
+  interface*) over **shallow** ones (interface ≈ implementation in complexity); *"it is more
+  important for a module to have a simple interface than a simple implementation"* (**pull
+  complexity downward**); and **tactical vs strategic** programming (invest continuously in design
+  rather than just shipping features). **⚠ Honesty flag:** the book is **explicitly opinion** —
+  Ousterhout opens by asking *"what makes me think I know all the answers about software design? To
+  be honest, I don't"* and tells the reader to *"take the suggestions in this book with a grain of
+  salt."* It distills his Stanford **CS190** course (classroom experience, not a study), and parts
+  of it — notably **module depth / "classitis"** — are **genuinely contested** among experienced
+  engineers. Craft doctrine, not science.
+
+**D1b — The information-hiding foundation `[Practitioner-canon]` (foundational design principle).**
+
+- Parnas, D. L. (1972). "On the Criteria To Be Used in Decomposing Systems into Modules."
+  *Communications of the ACM*, 15(12), 1053–1058. doi:10.1145/361598.361623. `[Practitioner-canon]`
+  (foundational) — The origin of **information hiding** and the answer to *what* a deep module
+  should hide: decompose a system so that **each module hides a design decision that is likely to
+  change**, behind an interface that does not change when the decision does. Parnas contrasts two
+  decompositions of one program (a conventional flowchart split vs. an information-hiding split) and
+  argues the latter yields modules that can be **changed independently** and **understood
+  independently**. The classic origin of the deep-module / encapsulation line; Ousterhout's "deep
+  module" is largely "a module that hides a likely-to-change decision well." A design *criterion*
+  and argument by a major figure — **not** an empirical result. *(Citation, venue, pages, and the
+  information-hiding / likely-to-change-decision thesis verified against the CACM record during D1's
+  authoring.)*
+
+**D1c — Complexity metrics are weak/contested `[Some empirical, contested]` — the honest fence.**
+Included **precisely to keep the module honest**: the number people reach for to "measure
+complexity" does **not** measure what D1 is about. **Do NOT use a metric to settle a design
+question or to upgrade D1's craft core toward `[Verified]`.**
+
+- McCabe, T. J. (1976). "A Complexity Measure." *IEEE Transactions on Software Engineering*,
+  SE-2(4), 308–320. doi:10.1109/TSE.1976.233837. `[Some empirical, contested]` — Defines
+  **cyclomatic complexity** (independent paths through a function), proposed as a reliability/
+  testability predictor. As a **defect predictor it is weak and contested**.
+- Shepperd, M. (1988). "A critique of cyclomatic complexity as a software metric." *Software
+  Engineering Journal*, 3(2), 30–36. doi:10.1049/sej.1988.0003. `[Some empirical, contested]` —
+  Argues the metric rests on *"poor theoretical foundations"* and that *"for a large class of
+  software it is no more than a proxy for, and in many cases is outperformed by, lines of code."*
+  The standing critique that cyclomatic complexity mostly re-measures **size**. *(Verified caveat,
+  re-confirmed during D1 authoring: cyclomatic complexity is strongly correlated with LOC, and
+  **"reducing the cyclomatic complexity of code is not proven to reduce the number of errors or
+  bugs"**; Les Hatton's finding that it has "the same predictive ability as lines of code" is the
+  same conclusion. The coach NEVER claims a metric measures "real" complexity.)*
+
+→ Drives module **D1** (managing complexity / abstraction). The *concept* (deep vs shallow,
+dependencies + obscurity, the three symptoms, pull complexity down, tactical vs strategic) is
+`[Practitioner-canon]` (Ousterhout); the *foundation* (hide the decision likely to change) is
+`[Practitioner-canon]`, foundational (Parnas 1972); the metric literature is the
+`[Some empirical, contested]` **fence** that stops design quality being treated as a measurable
+scalar. **Hard honesty bounds:** (1) Ousterhout's philosophy is opinion from a course, not a study,
+and "classitis"/module-depth is genuinely contested — never "research shows." (2) **"Good
+abstractions / refactoring toward depth reduce bugs" is NOT an established empirical finding** —
+plausible craft only; keep the claimed win as *understandability and changeability*, not measured
+defect rates. (3) **Mechanical-sympathy / cache-locality** arguments (a cousin of "pull complexity
+down") matter in systems/HFT but are **overstated for typical application code**; D1 does not lean
+on them. The AI-era priority placing D1 in the verification cluster (judging whether an
+agent-generated abstraction is deep or just plausible-looking rises as agents draft code; spec §12)
+is `[Verified-adjacent]` — priority-steering, not proof. **Research note:** every snippet in D1's
+worked example and its nine tier exemplars is **real runner output** (Python 3.13), independently
+re-run from scratch during authoring and confirmed byte-for-byte against the pasted keys; because
+design quality is *not* executable ground truth, the runner is used only to pin **behavioral**
+sub-claims — most often that two designs are **behaviorally identical** (so any difference between
+them is a *complexity* difference, e.g. the worked example's `same? True`), or that a leaked
+invariant **actually bites** (a temporal-decomposition class raises when called out of order) — and
+the *design verdict* is rubric-graded against the golden exemplars, named out loud as softer than an
+executable pass.
+
+### Naming & identifier comprehension (module D2)
+
+**D2 is mixed-status by design** (its file badge is `[Practitioner-canon]`), and the split is
+sharper here than elsewhere in Track D *because a genuine empirical layer exists*: controlled
+experiments support "**descriptive identifiers aid comprehension**" at `[Some empirical]`, while
+the specific prescriptions (what "precise" means, the precision+consistency doctrine, length/style
+heuristics) are `[Practitioner-canon]`. The honesty rule binds hard: badge the empirically-supported
+claim distinctly from the craft, do **not** let the famous design book borrow the empirical layer's
+credibility, and do **not** present a naming *convention* as proven. (Ousterhout's *A Philosophy of
+Software Design* is already on the [reading spine](#reading-spine-book-canon) as a D1–D3 anchor;
+itemized here for the specific Ch. 14 claims D2 cites.)
+
+**D2a — Identifier-comprehension evidence `[Some empirical]` (controlled experiments).** Real but
+narrow empirical work; the *direction* (descriptive > cryptic) is supported, the fine ordering is
+not settled, and no *convention* is proven. The coach says: *"controlled studies show descriptive
+names help comprehension — not that any naming rule is proven."*
+
+- Hofmeister, J., Siegmund, J., & Holt, D. V. (2017). Shorter identifier names take longer to
+  comprehend. *SANER 2017* (IEEE 24th Int'l Conf. on Software Analysis, Evolution and
+  Reengineering), 217–227. doi:10.1109/SANER.2017.7884623. (Extended journal version: *Empirical
+  Software Engineering* 24(1), 417–443, 2019, doi:10.1007/s10664-018-9621-x.) `[Some empirical]` —
+  Controlled **within-subjects** experiment, **72 professional C# developers** who **looked for
+  defects** in code in three identifier styles (**letters, abbreviations, words**), with
+  defect-finding time measured. **Verified headline (abstract, verbatim):** *"words lead to, on
+  average, 19% faster comprehension speed compared to letters and abbreviations, but we did not
+  find a significant difference in speed between letters and abbreviations."* This is the
+  load-bearing source for "descriptive names help." **The 19% belongs to THIS paper** (defect-find
+  speed, full words over BOTH letters and abbreviations) — *not* to Lawrie 2006 (see research
+  note). The authors' own framing of the effect is modest ("fairly small").
+- Lawrie, D., Morrell, C., Feild, H., & Binkley, D. (2006). What's in a Name? A Study of
+  Identifiers. *ICPC 2006* (14th IEEE Int'l Conf. on Program Comprehension), 3–12.
+  doi:10.1109/ICPC.2006.51. `[Some empirical]` — **128 participants** rated descriptions of twelve
+  functions shown in three variants (**full words / abbreviations / single letters**); free-form
+  descriptions scored 0–5 by two raters (κ = 0.71). **Verified (abstract):** *"full word
+  identifiers lead to the best comprehension; however, in many cases, there is no statistical
+  difference between full words and abbreviations."* **Verified (results):** full words give
+  significantly better description ratings than single letters; *"There is never a statistical
+  difference between full words and abbreviations."* Measured **description quality + confidence**,
+  **not speed**. Note the honest tension with Hofmeister: both agree **words > single letters**,
+  but Lawrie found **abbreviations ≈ full words** while Hofmeister found **abbreviations ≈ letters**
+  — the abbreviation ordering is genuinely unsettled across studies.
+- Feitelson, D. G., Mizrahi, A., Noy, N., Ben Shabat, A., Eliyahu, O., & Sheffer, R. (2022). How
+  Developers Choose Names. *IEEE Transactions on Software Engineering* 48(1), 37–52.
+  doi:10.1109/TSE.2020.2976920. (Preprint arXiv:2103.07487.) `[Some empirical]` — **334 subjects**
+  chose names for given scenarios. Two verified findings frame D2's humility: (1) **no single
+  "correct" name** — *"in the 47 instances in our experiments the median probability [that two
+  developers pick the same name] was only 6.9%"*; yet (2) **a chosen name is usually legible** —
+  *"given that a specific name is chosen, it is usually understood by the majority of developers."*
+  Their model (pick concepts → choose words → assemble) produced names judged superior ~2:1, using
+  *more concepts and longer names*. So naming is underdetermined (don't bikeshed the "right" name),
+  but precision and concept-coverage measurably aid legibility.
+
+**D2b — Naming style/casing is CONTESTED `[Some empirical] — mixed/weak`.** Flag explicitly: the
+camelCase-vs-snake_case studies **contradict each other**, so style/casing is **not** an
+empirically settled convention. What is defensible is **consistency**; the *winner* is not.
+
+- Binkley, D., Davis, M., Lawrie, D., & Morrell, C. (2009). To CamelCase or Under_score. *ICPC
+  2009* (17th IEEE Int'l Conf. on Program Comprehension), 158–167. doi:10.1109/ICPC.2009.5090039.
+  `[Some empirical]` — **135 subjects**, timed identifier-recognition task: camelCase gave **higher
+  accuracy**, and subjects *trained* in camelCase recognized it faster — **but all subjects were on
+  average 13.5% *slower* on camelCase than underscore** (p < 0.0001).
+- Sharif, B., & Maletic, J. I. (2010). An Eye Tracking Study on camelCase and under_score
+  Identifier Styles. *ICPC 2010*, 196–205. doi:10.1109/ICPC.2010.41. `[Some empirical]` —
+  Eye-tracking replication of Binkley et al.: found **"no difference in accuracy between the
+  [styles]."** Reading-research on un-spaced text suggests camelCase trade-offs. Net:
+  small, training-dependent, contradictory — *do not* assert a style winner.
+
+**D2c — Naming craft `[Practitioner-canon]` (precision, consistency, "names are documentation").**
+Respected, well-argued craft, vetted during authoring against the named source — **not** empirical
+findings. The coach says: *"respected practice — not a verified research result."*
+
+- Ousterhout, J. (2018/2021). *A Philosophy of Software Design*, Ch. 14 "Choosing Names."
+  ISBN 978-1-7321022-0-0. `[Practitioner-canon]` — The craft anchor. Verbatim positions verified
+  against the text: **"Good names are a form of documentation: they make code easier to understand.
+  They reduce the need for other documentation and make it easier to detect errors."** The goal is
+  to **"create an image in the mind of the reader… what the underlying entity is, and, just as
+  important, what it is not."** **"Good names have two properties: precision and consistency."**
+  Consistency's three requirements, verbatim: *"first, always use the common name for the given
+  purpose; second, never use the common name for anything other than the given purpose; third,
+  make sure that the purpose is narrow enough that all variables with the name have the same
+  behavior."* Two red flags, verbatim: **"Red Flag: Vague Name"** and **"Red Flag: Hard to Pick
+  Name."** Illustrated by the author's six-month `block` data-corruption bug (one name used for
+  *disk block* and *file block*). **Honest counterpoint the book itself prints:** §14.5 quotes the
+  Go camp (Andrew Gerrand: *"long names obscure what the code does"*) and shows a single-letter
+  example its authors consider *more* readable — so even the canon concedes name *length* is a
+  matter of taste, not law.
+- Martin, R. C. (2008). *Clean Code*, Ch. 2 "Meaningful Names." ISBN 978-0-13-235088-4.
+  `[Practitioner-canon]` — **cite with care; contested opinion, not consensus.** Popularized
+  intention-revealing names, avoid-disinformation, pronounceable names; some overlaps the precision
+  principle. But the book's broader prescriptions (function length, structure) are widely disputed
+  in the profession, so the coach must **not** present it on a par with Ousterhout's narrower,
+  better-argued naming chapter. D2 leans on a *Clean Code* point only where it also stands on its
+  own or on the empirical layer — never on the book's authority alone.
+
+→ Drives module **D2** (naming). The *direction* (descriptive identifiers aid comprehension; no
+uniquely correct name but precision/concept-coverage help) is `[Some empirical]` (Hofmeister 2017;
+Lawrie 2006; Feitelson 2022); naming *style/casing* is contested (Binkley 2009 vs Sharif & Maletic
+2010) and **not** a proven convention; the *technique* (precise + consistent + never-lying; the two
+red flags) is `[Practitioner-canon]` (Ousterhout Ch. 14; *Clean Code* with care). D2's **lying-name**
+half is **executable**: a name that claims one behavior while the code does another is convicted by
+**running the code** — the authored-side twin of A2's lying-name reading skill and A1's superbug. The
+AI-era priority placing "does this name tell the truth about the behavior?" in the verification
+cluster (fluent agent output produces plausible-sounding names that may not match the code; spec §12)
+is `[Verified-adjacent]` — priority-steering, not proof.
+
+**Research note (verified against primary sources; one correction recorded).** The Hofmeister 2017
+"**19% faster comprehension speed**" figure and "**no significant difference between letters and
+abbreviations**," the N=72 C# defect-finding design, and the Lawrie 2006 "**full word… best…; no
+statistical difference between full words and abbreviations**" + N=128 + κ=0.71 were confirmed
+verbatim against the authors' own PDFs. Feitelson 2022's **6.9%** median name-agreement and "**usually
+understood by the majority of developers**" and N=334 were confirmed against the abstract. The
+Binkley 2009 **13.5%-slower-camelCase** (p<0.0001) and Sharif & Maletic 2010 **no-accuracy-difference**
+were confirmed against the Sharif & Maletic primary PDF (which quotes Binkley's result). All
+Ousterhout Ch. 14 quotes were confirmed against the book text. **Correction recorded:** a widespread
+secondary-source claim attributes "**~19% increase in comprehension**" to **Lawrie et al. 2006** —
+this figure is **NOT in that paper** (which measured description-quality ratings, not speed). The 19%
+is **Hofmeister et al. 2017**'s defect-finding-speed result. D2 cites the 19% to Hofmeister only, and
+states the Lawrie finding qualitatively (full words best; words = abbreviations; both > single
+letters). Exact TSE page range for Feitelson 2022 is cited from the TSE 48(1) record (37–52); if a
+module needs to pin the page range to the page, treat it as the one detail to re-confirm against the
+publisher copy.
+
+### Refactoring judgment (module D3)
+
+Extends the **reading-spine** anchors **Fowler, *Refactoring* (2nd ed., 2018)** and **Feathers,
+*Working Effectively with Legacy Code* (2004)** (already on the [reading spine](#reading-spine-book-canon))
+into a teachable judgment skill. **D3 is `[Practitioner-canon]` (craft) with one EXECUTABLE
+definition-anchor** (behavior preservation, enforced by the runner). The coach must keep these
+apart: the *definition* is verifiable by execution; the *discipline and judgment* are respected
+craft, **not** measured causation; and the *outcome* claim ("refactoring reduces bugs / improves
+maintainability") is **explicitly not established**.
+
+**D3a — The definition-anchor: behavior preservation `[Practitioner-canon]` (a definition the
+runner enforces).** Refactoring is *defined* by unchanged observable behavior, so "is this a
+refactor?" is decidable by running the same inputs through the BEFORE and AFTER code and diffing
+`stdout`/`status`. This is a **definition**, not an empirical finding; and the runner is a
+**falsifier** (one differing input disproves "refactor"), not a proof of total equivalence (the
+Dijkstra "presence not absence" caveat in [B3a](#testing--specifying-correctness-module-b3)).
+
+- Fowler, M. (2018). *Refactoring: Improving the Design of Existing Code* (2nd ed.).
+  Addison-Wesley. ISBN 978-0-13-475759-9. `[Practitioner-canon]` — Source of the **definitions**
+  (verified verbatim against martinfowler.com → *DefinitionOfRefactoring*, mirrored in ch. 2):
+  refactoring *(noun)* is **"a change made to the internal structure of software to make it easier
+  to understand and cheaper to modify without changing its observable behavior"**; *(verb)* **"to
+  restructure software by applying a series of refactorings without changing its observable
+  behavior."** Also the discipline of **small steps under tests** (make a tiny change, run the
+  tests, so a red test localizes the mistake to the last step — ch. 1, paraphrased, not pinned),
+  the **Two Hats** (at any moment you are *either* adding behavior *or* refactoring — never both in
+  one step), and the **Rule of Three** (ch. 2, attributed to **Don Roberts**: refactor on the
+  third duplication, not the first). Craft doctrine, not an effectiveness experiment. *(Verified:
+  both definitions confirmed verbatim on martinfowler.com/bliki/DefinitionOfRefactoring.html;
+  Rule-of-Three attribution to Don Roberts confirmed across multiple secondary sources; the exact
+  Roberts wording is cited in its standard published form, not as a page-pinned quote.)*
+- Beck, K. (2012, Sep 25). *"for each desired change, make the change easy (warning: this may be
+  hard), then make the easy change."* `[Practitioner-canon]` — The **preparatory-refactoring**
+  line: when a feature is awkward to add, first refactor (behavior-preserving) so the new shape
+  fits, then add it. The operational form of "refactor the code you are about to touch." *(Verified
+  verbatim against Beck's own post: x.com/KentBeck/status/250733358307500032, dated 2012-09-25.)*
+
+**D3b — Legacy code & characterization tests `[Practitioner-canon]` (the "when not to refactor
+yet" discipline).** The honest answer to "refactor untested code?" is: **not until you have pinned
+its behavior with a characterization test first** — the quirk may be load-bearing.
+
+- Feathers, M. C. (2004). *Working Effectively with Legacy Code.* Prentice Hall (Robert C. Martin
+  Series). ISBN 978-0-13-117705-5. `[Practitioner-canon]` — Source of the operational definition
+  **"legacy code is code without tests"** (*old* isn't the problem; *untested* is, because you
+  cannot change it safely) and the **characterization test** — "a test that characterizes the
+  actual behavior of a piece of code": when code has no tests, you do **not** clean it up first;
+  you pin its *current* behavior (including its weird corners) with characterization tests, then
+  refactor under that green net. Also the **seams / dependency-breaking** techniques for getting
+  untestable code into a harness. Craft doctrine, not an effectiveness experiment. *(Verified:
+  definition and characterization-test concept confirmed against multiple authoritative summaries
+  and the book's Internet Archive copy; not independently page-pinned in this pass — cited as
+  origin-of-record for the concepts.)*
+
+**Honesty bound for D3 (the load-bearing one).** Refactoring is **respected craft, not a verified
+intervention.** Its *causal* effect on defect rate and long-term maintainability has only **mixed,
+contradictory, and limited** empirical support — studies disagree (some report fewer defects after
+refactoring, others report *more* bug reports following heavy refactoring, and at least one large
+study found *no clear effect* on maintainability/modifiability). **Do NOT claim "refactoring
+reduces bugs" or "improves maintainability" as proven.** The one part that *feels* verified —
+behavior preservation — is a **definition enforced by the runner**, not an empirical outcome
+finding. *(Research note: the "mixed/contradictory" characterization here rests on a secondary
+synthesis of the refactoring-vs-defects literature [e.g. the often-contrasted Ratzinger et al.
+2008 vs. Weißgerber & Diehl 2006, and Bavota et al. 2015's "no clear effect" on
+maintainability/modifiability]; these individual primaries were **not** each pinned against their
+own PDFs in this pass, so the module cites the *direction* — "the evidence is mixed and limited" —
+and deliberately does **not** cite a specific effect size. Cite less, not more.)*
+
+→ Drives module **D3** (refactoring judgment). The *definition* (D3a) is verifiable by the runner;
+the *discipline and judgment* (D3a Two-Hats/Rule-of-Three/small-steps; D3b characterize-first) are
+`[Practitioner-canon]`; the *outcome* claim is **not established**. Sibling **D1 (deep modules,
+Ousterhout)** owns the design *target* refactoring moves toward; **B3** owns the tests that make
+the small steps safe. The AI-era priority placing D3 in the verification cluster (verifying that a
+fluent agent "refactor" *actually* preserved behavior; spec §12) is `[Verified-adjacent]` —
+priority-steering, not proof.
+
+### Performance & mechanical sympathy (module D4)
+
+**D4 is the most extrapolation-heavy module in the curriculum** (its file badge is
+`[Practitioner-canon]`): it mixes a small genuine empirical core, exact mathematics dressed in
+engineering doctrine, and a hardware layer that is real in specific domains but **overstated for
+typical application code**. The coach must keep the four statuses apart and never present the canon
+or the extrapolation as verified science.
+
+**D4a — "Measure, don't guess the bottleneck" `[Some empirical]`.** The originator's *reported
+universal experience*, not a controlled study — but a real empirical observation, not a
+prescription. The coach says: *"Knuth reported this and it's widely echoed — not 'studies prove.'"*
+
+- Knuth, D. E. (1974). Structured Programming with `go to` Statements. *ACM Computing Surveys*,
+  6(4), 261–301, **on p. 268**. doi:10.1145/356635.356640. `[Some empirical]` — In the same passage as the famous aphorism (a few sentences later, just past the "critical 3%" qualifier), Knuth writes (verified verbatim against the primary source during
+  authoring): **"It is often a mistake to make *a priori* judgments about what parts of a program
+  are really critical, since the universal experience of programmers who have been using
+  measurement tools has been that their intuitive guesses fail."** This is the empirical anchor for
+  D4's "profile / count operations before you optimize" discipline — the originator's report that
+  hot-path intuition is unreliable. Badged `[Some empirical]` (one expert's reported experience,
+  1974, not a replicated controlled study), not `[Verified]`.
+
+**D4b — "Premature optimization is the root of all evil," IN CONTEXT `[Practitioner-canon]`.** The
+most-misquoted sentence in the field. The verifiable origin-of-record and the **full** quote, which
+*preserves the critical 3%*:
+
+- Knuth, D. E. (1974). Structured Programming with `go to` Statements. *ACM Computing Surveys*,
+  6(4), 261–301, **p. 268**. `[Practitioner-canon]` (aphorism in context). Verbatim (verified
+  against the primary source): **"We should forget about small efficiencies, say about 97% of the
+  time: premature optimization is the root of all evil. Yet we should not pass up our opportunities
+  in that critical 3%. … he will be wise to look carefully at the critical code; but only after
+  that code has been identified."** Three corrections D4 makes in-text: (1) it does **not** mean
+  "never optimize" — it preserves the 3% to optimize *once identified by measurement*; (2) the
+  sentence just before argues *against* blanket "ignore efficiency" advice ("a 12% improvement,
+  easily obtained, is never considered marginal"); (3) it is sometimes called **"Hoare's dictum"** —
+  Knuth attributed it to C. A. R. Hoare in 1989 ("The Errors of TeX"), but **that attribution is
+  doubtful** and Knuth 1974 is the origin-of-record. (A variant of the aphorism also appears in Knuth's
+  1974 Turing Award lecture, "Computer Programming as an Art," *CACM* 17(12), 667–673, p. 670: "premature optimization is the root of all evil (or at least most of it) in programming.")
+  Cite Knuth 1974 as origin; do **not** assert the Hoare attribution as fact.
+
+**D4c — Big-O cost models: math + doctrine `[Practitioner-canon]`.** Asymptotic complexity is
+*mathematics* (`O(n log n)` is the comparison-sort lower bound by proof); what is **canon** is the
+*engineering doctrine* built on it — that asymptotic class is the right first-order model of "what
+scales," that you should know your data structures' per-operation costs, and that an algorithmic
+change usually dwarfs a micro-optimization. The coach says: *"respected practice on an exact
+mathematical foundation — not 'research shows.'"*
+
+- Cormen, T. H., Leiserson, C. E., Rivest, R. L., & Stein, C. (2009). *Introduction to Algorithms*
+  (3rd ed.). MIT Press. ISBN 978-0-262-03384-8. `[Practitioner-canon]` (textbook) — Standard
+  reference for the asymptotic (Θ/O/Ω) definitions and the cost of canonical algorithms. The math
+  is exact; its *application as engineering doctrine* is craft.
+- **Python Wiki — *TimeComplexity*** (<https://wiki.python.org/moin/TimeComplexity>).
+  `[Practitioner-canon]` (CPython reference, factual). The de-facto reference for per-operation
+  costs in CPython, used to ground D4's worked example and drills. Figures **verified against the
+  page during authoring**: list `x in s` (membership) **O(n)**; list `Insert` **O(n)**, `Get Item`
+  **O(1)**; `set` `x in s` **O(1) average / O(n) worst**; `dict` `Get Item` **O(1) average / O(n)
+  worst**. The page's own note grounds the front-insert trap: "Internally, a list is represented as
+  an array; the largest costs come from … inserting or deleting somewhere near the beginning
+  (because everything after that must move)."
+
+**D4d — "Mechanical sympathy" `[Practitioner-canon]` (in its domains) + EXTRAPOLATION (for general
+code).** The honesty fault line of the module. The term comes from racing (a driver's feel for the
+car) and was **popularized for software by Martin Thompson** (the *Mechanical Sympathy* blog; the
+LMAX Disruptor). It is *real and decisive* in systems / HFT / game-engine / numeric-kernel work,
+and **overstated for typical application code**, where algorithmic complexity and I/O dominate and
+cache-level reasoning is usually premature (and largely invisible in interpreted Python).
+
+- Thompson, M. — *Mechanical Sympathy* blog (<https://mechanical-sympathy.blogspot.com>) and the
+  **LMAX Disruptor**. `[Practitioner-canon]` + extrapolation. Origin of the software usage; the
+  Disruptor is the canonical demonstration that cache-aware, allocation-aware, contention-aware
+  design can beat a queue by a large margin **in the right domain**. *Honesty note:* the Disruptor's
+  latency/throughput advantage is reported by **its authors / practitioner write-ups** (see also
+  Fowler, M., "The LMAX Architecture," martinfowler.com, 2011), not an independent controlled
+  study — cite as a domain demonstration, not measured general fact.
+- Thompson, M. — *On Mechanical Sympathy* (SE Radio Episode 201, 2014), where Thompson explains the
+  term's racing origin and its relevance to program performance. `[Practitioner-canon]` (interview)
+  — supporting origin-of-record for the term's software popularization.
+
+→ Drives module **D4** (performance & mechanical sympathy). The *measure-don't-guess* core is
+`[Some empirical]` (Knuth 1974, p. 268 — a reported experience, not a replicated study); *Big-O* is
+exact math whose *application* is `[Practitioner-canon]` (CLRS; CPython complexity reference, both
+verified); *mechanical sympathy* is `[Practitioner-canon]` in systems/HFT/game contexts **and
+extrapolation** for the claim that it matters to the median program. The coach must say plainly: for
+most code, fix the **algorithm** and the **I/O** first; cache-line reasoning is a specialist tool,
+not a default. The curriculum-wide transfer caveat applies in full — the transfer task (a real slow
+path in the learner's own code) is the honest individual-level test. **Research note:** every
+operation count, growth ratio, timeout status, and behavior-preservation check in D4's worked
+example and its nine tier exemplars is **real runner output**, independently re-run from scratch
+during authoring and confirmed against the pasted keys; precise wall-clock (`duration_s`) is treated
+as **noisy and indicative only** (the runner crosses ~5s for naive `fib` at a machine-dependent n —
+`fib(40)` reliably times out here, while `fib(32)`/`fib(35)` complete — which is exactly why the
+deterministic op-counts are the primary signal and timeout-status is the dramatic confirmation).
+
+---
+
 ## Reading spine (book canon)
 
 The curriculum's book-length sources. These are **not** all peer-reviewed evidence;

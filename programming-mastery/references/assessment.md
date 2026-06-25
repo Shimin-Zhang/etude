@@ -407,6 +407,257 @@ the printed example verbatim, so the battery can be re-run later with held-out i
 
 ---
 
+#### D1 — Managing complexity / abstraction
+
+- **Shape.** Give **two small designs of the same utility** (≈10–20 lines total) — e.g. a config
+  reader, a cart-line pricer, or a small "model" class — that are **behaviorally identical** but
+  differ in *where the complexity lives*: one **deep** (powerful work behind a simple interface),
+  one **shallow** (a thin pass-through / a flag that leaks a decision / a class that just renames a
+  dict's fields, so the interface is nearly as complex as the implementation). Ask the learner to
+  **judge which is deeper, locate the complexity, and justify it** — *which design would you prefer,
+  where does the complexity actually live, and why?* (A single design also works: "is this deep or
+  shallow, and does this abstraction pay for itself?")
+- **Scored.** *Product:* did they reach the **defensible verdict** (deep vs shallow / pays vs
+  doesn't) and put a finger on the **actual** complexity — a dependency, an obscurity, or a leaked
+  decision — rather than a decoy (a naming nit, a style point)? *Process — the discriminating
+  signal:* did they argue depth **at the interface** (how much work and how much "you must know" it
+  spares the caller; Parnas's *decision likely to change*) and name the **symptom** it costs (change
+  amplification / cognitive load / unknown-unknowns) — or did they count structure ("it's deeper
+  because it's a class / the methods are short") or reach for a metric ("low cyclomatic complexity,
+  so it's simple")? Counting structure or invoking a metric is the Foundations signature; locating a
+  real leak and justifying it at the interface is the Advanced signature.
+- **Routes via** the D1 rubric (Part 2; module §7). Judgment-graded against exemplars. Per the
+  partial-knowledge boundary (Part 1.3): **counts structure / "it's a class so it's abstracted" /
+  reaches for a metric, no leak located → Foundations** (the mental model needs building);
+  **names that one design "leaks" or "is shallow" but justifies it by implementation shape (short
+  methods, fewer lines) rather than interface-hiding, or inverts which is deeper → Working** (a
+  partial model to correct — they sense the difference but measure it wrong); **judges correctly,
+  locates the real complexity, justifies it at the interface in deep/shallow + likely-to-change
+  terms, and names the symptom → Advanced** (promote per the per-module rubric; combining a
+  proposed deepening with the trade-off, incl. when the shallow version is right, is the Advanced
+  bar).
+- **Caveats baked in.** **(1) Grading is judgment-graded and explicitly softer than A1/A3/C1's
+  executable grading** — the coach can *run the two designs to prove they are behaviorally
+  identical* (so the difference is complexity, not behavior) or *run a leaked invariant to show it
+  bites*, but **"is this abstraction good?" is not a computation**; the coach grades the located
+  cause and the interface-level justification against the rubric + exemplars and says so out loud
+  (`drill-generation.md` §3; module §5d). **(2)** There is **no single correct design** — the
+  rubric rewards a *well-located, well-justified* judgment (and the honest "it depends" where the
+  shallow shape is actually right), not matching one template. **(3)** D1 is **`[Practitioner-canon]`** —
+  Ousterhout's *A Philosophy of Software Design* (an explicitly opinionated philosophy from a
+  Stanford course, parts contested) on the Parnas 1972 information-hiding foundation — **not**
+  verified science; the coach never presents it as "research shows," and **never** lets a complexity
+  *metric* (cyclomatic complexity is largely a proxy for size; Shepperd 1988) stand in for "real"
+  complexity.
+- **Concrete example** (Foundations/Working boundary — deep vs shallow, same behavior):
+
+  ```python
+  # Design A
+  class Config:
+      def __init__(self, data): self._data = data
+      def get_int(self, key, default):
+          if key not in self._data: return default
+          return int(self._data[key])
+
+  # Design B
+  class ShallowConfig:
+      def __init__(self, data): self._data = data
+      def raw(self, key): return self._data.get(key)   # caller must None-check + cast every time
+  ```
+
+  Ask: "These behave the same — which is the *deeper* design, where does the complexity live, and
+  why?" Ground truth for the **behavioral** claim is obtained by running both on the same inputs
+  (present key and missing key) — they return equal results, so the difference is **complexity, not
+  behavior**. The discriminating signal is **process**: does the learner see that A's `get_int`
+  **hides** the missing-key fallback and the cast (a decision likely to change) so callers stay
+  one-liners, while B's `raw` **leaks** that decision to every call site (cognitive load now, change
+  amplification later)? A learner who says "B is fine, it's more flexible / they behave the same so
+  it doesn't matter" has the gap — record it ("conflated same-behavior with same-complexity; depth
+  judged at the implementation") in the tracker.
+
+---
+
+#### D2 — Naming
+
+- **Shape.** Give a short function whose **name makes a claim about behavior** and whose body either
+  (a) **lies** about it — a `get_`/`load_` that writes, an `is_`/`has_` with a side effect or a
+  non-bool return, a `count`/`average`/`total` that returns a different quantity, a `copy` that
+  mutates, an inverted predicate — or (b) is merely **vague** (`tmp`, `data`, `process()`). Ask the
+  learner to **(1) say what it actually does, (2) decide whether the name matches the behavior, and
+  (3) propose a better name or the behavior fix.** A second, optional prompt: show two functions that
+  name the **same concept** with different verbs/shapes and ask which to standardize on.
+- **Scored — two verdicts, reported separately (the module is hybrid, §5d).** *Product / D1 — honest?
+  (executable):* "does the name match the behavior?" is settled by **running the snippet** — the coach
+  runs it, surfaces the output, and the behavior decides (a lying name is convicted by the run, never
+  by opinion). *Product / D2–D3 — name quality (rubric):* is the proposed name **precise** (says what
+  it is and isn't, not too generic or over-claiming) and **consistent** (one-concept-one-name; not
+  bikeshedding a mythical "right" name)? *Process:* did the learner reason from **behavior** (run/trace
+  it) rather than trusting the name — the authored-side of A2's lying-name skill and A1's superbug?
+- **Routes via** the D2 rubric (Part 2; module §7). Cannot tell the name lies / trusts the name over
+  the run → **Foundations**; catches a plausible-but-wrong name via the run but proposes a vague
+  rename, or names the lie without stating the call-site impact → **Working** (partial model to
+  sharpen); catches a two-issue or cross-function-consistency fault, **proves it with a run**,
+  explains the impact, proposes the consistent/honest fix, and articulates the precision/consistency/
+  honesty principle → **Advanced**.
+- **Caveats baked in.** **(1) Grading is hybrid and the halves differ in firmness:** the lying-name
+  verdict is **executable ground truth** (behavior wins — the coach runs it and shows the output);
+  the name-quality verdict is **rubric + exemplars** and explicitly softer (Feitelson 2022: two devs
+  agree on a name only ~6.9% of the time, so there is no uniquely correct name — the coach says so).
+  **(2)** The empirical layer (descriptive identifiers aid comprehension — Hofmeister 2017 "19% faster"
+  at `[Some empirical]`; Lawrie 2006; Feitelson 2022) supports only the **direction**, *not* any
+  **convention**; naming *style/casing* (camelCase vs snake_case) is **contested** (Binkley 2009 vs
+  Sharif & Maletic 2010) and must never be presented as proven. **(3)** The precision/consistency
+  doctrine is **`[Practitioner-canon]`** (Ousterhout Ch. 14), not verified science — the coach never
+  presents it above its badge.
+- **Concrete example** (administer or vary — a lying name where behavior decides):
+
+  ```python
+  def is_empty(c):
+      return len(c)          # a predicate that returns a length, not a bool
+  ```
+
+  The coach obtains ground truth by **running** it: `is_empty([])` is `0` (falsy, "looks" right) and
+  `is_empty([1,2,3])` is `3` (truthy, "looks" right) — but it returns an **int**, not a bool, so
+  `is_empty([1]) == True` is `True` *by luck* (`1 == True`) while `is_empty([1,2]) == True` is
+  **`False`**. The discriminating signal is whether the learner **reasons from the run** (the name
+  promises a bool; the code returns a length; here's the comparison that breaks) versus eyeballing
+  the plain-`if` case and declaring it fine. A learner who says "it works" trusted the name over the
+  machine — record that exact gap ("trusts name over behavior; predicate returns non-bool"). Strong
+  answers catch the type lie, show the `== True` break, and fix to `return len(c) == 0` / `return not
+  c`.
+
+---
+
+#### D3 — Refactoring judgment
+
+- **Shape.** Show a small **BEFORE** function (5–15 lines, with a real structural smell — nested
+  conditionals, a duplicated sub-expression, a magic number, or a combined boolean) **and a
+  candidate "refactor"** of it. The candidate **may or may not** preserve behavior (vary this).
+  Ask the learner to **decide: is this a behavior-preserving refactor or a behavior change in
+  disguise? Name the specific inputs you'd run through BOTH versions to decide, and — if it
+  changed behavior — say where and why. Then: would you refactor this here at all, and what would
+  you make sure exists first?**
+- **Scored.** *Product:* did they reach the right **refactor-vs-behavior-change** verdict (settled
+  by the coach **running** the same battery through BEFORE and AFTER and diffing `stdout`/`status`
+  — executable ground truth, never guessed)? *Process — the primary signal:* did they pick the
+  **discriminating** inputs (the boundary, the second call, the remainder-producing case — not the
+  inputs that happen to agree), and did they reason that **untested code must be characterized
+  first** (Feathers) and that **one diff = one hat** (Fowler)? A learner who eyeballs a clean diff
+  and declares "refactor" **without naming inputs to run** has committed the central D3 error
+  (judging by reading, not running) and scores **low on process even if the verdict is right by
+  luck**; a learner who names the deciding input and says "I'd run both and diff" scores **high**
+  even if their arithmetic is off.
+- **Routes via** the D3 rubric (Part 2; module §7). **Caveats baked in. (1)** Grading is **hybrid
+  and the executable half is strong**: behavior preservation is **verified by running** (a
+  "refactor" that changes the battery's output **fails outright**, however clean it looks), while
+  *whether* this was the right refactor and the *test-first discipline* are **rubric + exemplars**
+  and explicitly **softer** — the coach says so. **(2)** The runner proves preservation **only for
+  the inputs run** (a falsifier, not a proof of total equivalence; Dijkstra) — a "tests pass, so
+  it's safe" conclusion on a weak battery is itself a scored error. **(3)** D3 is
+  `[Practitioner-canon]`: the coach **never** claims "refactoring reduces bugs / improves
+  maintainability" (the empirical evidence is mixed and limited); the verified-feeling part is a
+  *definition*, not an outcome finding.
+- **Routing boundary** (instantiates Part 1.3). Cannot tell a behavior change from a refactor / can't
+  name any inputs to check → **Foundations** (the model needs building). Names that you'd "run it
+  and compare" but picks the inputs that *agree* and misses the deciding one, or reaches for a
+  refactor on untested code without mentioning a characterization test → **Working** (partial
+  discipline to correct). Picks the discriminating inputs, correctly classifies refactor-vs-change,
+  and unprompted says "characterize first / one hat at a time" → **Advanced**.
+- **Concrete example** (Working boundary — a behavior change wearing a refactor's clothes):
+
+  ```python
+  # BEFORE — reject unless BOTH fields are present
+  def can_submit(has_name, has_email):
+      if not (has_name and has_email):
+          return "blocked"
+      return "ok"
+
+  # CANDIDATE "refactor" — "I distributed the not"
+  def can_submit(has_name, has_email):
+      if not has_name and not has_email:
+          return "blocked"
+      return "ok"
+  ```
+
+  Ask: "Is the candidate a behavior-preserving refactor? Which inputs decide it?" The coach obtains
+  ground truth by **running** both over the truth table: they diverge on the **mixed** rows —
+  `(True, False)` and `(False, True)` go from `blocked` to `ok` (the candidate used De Morgan's law
+  wrong: `not (a and b)` is `not a OR not b`, not `not a AND not b`). The discriminating signal is
+  **process**: a learner who names the mixed rows `(T,F)`/`(F,T)` as the deciding inputs — and notes
+  the all-true/all-false rows would *hide* the bug — has the skill; a learner who eyeballs
+  "distributed the not, looks like a refactor" has the central D3 gap. Record that exact gap
+  ("judged behavior preservation by reading, not running") in the tracker.
+
+---
+
+#### D4 — Performance & mechanical sympathy
+
+- **Shape.** Give a short, **correct but slow** function whose cost is **non-obvious** — a hidden
+  super-linear operation (e.g. list-membership inside a loop, `list.insert(0, …)` / string `+=`
+  building a result, an exponential recursion without memoization), often sitting next to a
+  visibly-complex-but-cheap decoy (string formatting, a little bounded arithmetic helper). Ask the
+  learner to **name the cost class (Big-O), locate the *real* bottleneck, say what they would change
+  to make it scale, and how they would *confirm* the speedup** — without writing a full benchmark
+  harness.
+- **Scored.** *Product:* is the Big-O / dominating cost correct (the coach obtains ground truth by
+  **running an instrumented version that counts the dominant operation at two or three input
+  sizes**, or by showing a naive version **times out** — never by guessing, and **never** by a
+  single noisy wall-clock)? *Process — weighted heavily:* did the learner **reason about what grows**
+  and locate the bottleneck by reasoning/measurement rather than guessing the visibly-complex part
+  (Knuth's "intuitive guesses fail"), name the **fix that changes the cost class** (usually
+  algorithmic / I/O, not a micro-tweak), and insist on **confirming with a count / profile across
+  sizes** and that **behavior is preserved** (correct first, then fast)? A learner who micro-optimizes
+  the decoy, "confirms" a speedup from one timing, or reaches for a hardware trick (cache lines,
+  `__slots__`, a C rewrite) before measuring scores **low on process** even if they can recite a
+  Big-O elsewhere — sending the optimization to the wrong *level* is the central D4 failure.
+- **Routes via** the D4 rubric (Part 2; module §7). Cannot name the cost class / can't engage the
+  growth at all → **Foundations**; finds the hidden super-linear cost and names a class but
+  **micro-tweaks the wrong thing** or reaches for level-3/4 before measuring → **Working** (partial
+  model to correct); names the class, identifies the **level** that dominates, gives a fix that
+  changes the class, and says how to **confirm it (op-count / profile, not a stopwatch) with behavior
+  preserved** → **Advanced**.
+- **Caveats baked in.** **(1) Grading is hybrid and the executable half is deliberately limited** —
+  the coach grades on **timeout-status** and **deterministic operation counts**, **not** precise
+  wall-clock (`duration_s` is noisy in the sandbox; the coach says so and never grades on it). **(2)**
+  D4 is the **most extrapolation-heavy** module: the *measure-don't-guess* core is `[Some empirical]`
+  (Knuth 1974, p. 268 — a reported experience, not a replicated study); *Big-O* is exact math whose
+  *application* is `[Practitioner-canon]`; *mechanical sympathy* (cache lines, branch prediction) is
+  `[Practitioner-canon]` in systems/HFT/game contexts and **extrapolation for typical application
+  code** — where the **algorithm and the I/O dominate** and cache-level reasoning is usually
+  premature. The coach never presents the canon or the hardware layer above its badge. **(3)** The
+  famous "premature optimization is the root of all evil" line **preserves the critical 3%** — it
+  means don't optimize the 97% that doesn't matter *and do* optimize the 3% once measurement
+  identifies it; a learner who reads it as "never optimize" and refuses to fix an identified, measured
+  hot path has the misconception D4 corrects.
+- **Concrete example** (Working boundary — the heavy-looking stage isn't the cost):
+
+  ```python
+  def build_report(records):
+      seen = []
+      unique = []
+      for r in records:
+          if r not in seen:                          # r in <list>: O(len(seen)) -> O(n^2) total
+              seen.append(r)
+              unique.append(r)
+      lines = []
+      for r in unique:
+          lines.append(f"record-{r:06d}-formatted")  # looks heavy, but O(n)
+      return lines
+  ```
+
+  Ask: "This is too slow on large inputs. A teammate wants to optimize the string-formatting loop.
+  Are they right — which part actually dominates, what's its Big-O, and what's the fix?" The coach
+  obtains ground truth by **counting** the two stages (at n=2000 the dedup stage does **1,999,000**
+  list-comparisons vs the format stage's **2,000** — a ~**999×** gap), then confirms the one-line fix
+  (`seen = set()` → membership O(1) average → the dedup stage becomes O(n)) **preserves the deduped
+  output**. The discriminating signal is **process**: does the learner reason that the *innocuous*
+  membership scan (O(n²)), not the *visibly-complex* f-string (O(n)), is the bottleneck — i.e. resist
+  guessing — and name an **algorithmic** fix rather than micro-tuning the loop? A learner who agrees
+  "optimize the formatting" has guessed the bottleneck from surface complexity — record that exact gap
+  ("guessed the bottleneck / optimized the decoy") in the tracker.
+
+---
+
 ### 1.5 Reporting the result to the learner
 
 After the battery (or the spine), the coach reports per skill:

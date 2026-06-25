@@ -45,8 +45,7 @@ python programming-mastery/runtime/python/runner.py snippet.py
 ## Module index
 
 All 20 modules. Tracks are a **recommended order, not a gate** — the learner
-may sample any module at any tier. Modules not yet authored are listed; the
-coach should say so gracefully if asked for one.
+may sample any module at any tier. **All 20 are authored.**
 
 ### Track A — Comprehension `[Verified]`
 
@@ -95,7 +94,7 @@ coach should say so gracefully if asked for one.
 | ID | Module | Tier badge | Core idea |
 |---|---|---|---|
 | F1 | Metacognition & calibration | `[Verified-adjacent]` | Knowing what you don't know: calibrate confidence, notice confusion early, monitor your own understanding. |
-| F2 | Designing your own practice *(meta-capstone)* | `[Verified]` meta | What well-designed practice actually is: quality + immediate feedback + individualized targeting, not hour-dosing. Revisited throughout. |
+| F2 | Designing your own practice *(meta-capstone)* | `[Verified-adjacent]` meta | What well-designed practice actually is: quality + immediate feedback + individualized targeting, not hour-dosing. Revisited throughout. |
 | F3 | Learning new languages & frameworks fast | `[Verified-adjacent]` | Transfer: acquire a new notional machine + idioms quickly; map the unfamiliar onto what you know. |
 
 ## Pointers
@@ -107,7 +106,7 @@ coach should say so gracefully if asked for one.
 | `references/drill-generation.md` | Drill mechanics: generation-spec format, exercise-format catalog, executable ground truth, self-check pass, Frontier escalation rules. |
 | `references/assessment.md` | Entry assessment + per-module mastery rubrics + measurement protocol + optional affective self-report layer. |
 | `progress-template.md` | Per-learner tracker template; copy to `programming-mastery-progress.md` in the learner's working dir. |
-| `modules/<ID>-*.md` | Per-skill teaching content (mental model, worked example, generation spec, exemplar pointers, mastery rubric). *Authored so far: A1–A3, B3, C1–C3, D1–D4, E3, F1 (13 of 20); the remaining modules are listed in the index above — the coach says so gracefully if asked for one.* |
+| `modules/<ID>-*.md` | Per-skill teaching content (mental model, worked example, generation spec, exemplar pointers, mastery rubric). *All 20 modules authored: A1–A4, B1–B3, C1–C3, D1–D4, E1–E3, F1–F3.* |
 | `exemplars/<ID>/<tier>/` | Golden drill exemplars (~3 per tier) used for few-shot calibration, worked examples, and offline fallback. |
 
 ## Honesty rules

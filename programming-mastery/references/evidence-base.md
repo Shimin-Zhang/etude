@@ -1174,6 +1174,286 @@ deterministic op-counts are the primary signal and timeout-status is the dramati
 
 ---
 
+### Concurrency mental models (module A4)
+
+Extends [Finding 1](#1-the-notional-machine-is-the-durable-barrier--not-syntax-verified) (the notional
+machine) into the *concurrent* setting, and **reuses the concurrency-bug taxonomy** (Lu, Park, Seo &
+Zhou 2008) already itemized under [Production & concurrency debugging (module C3)](#production--concurrency-debugging-module-c3)
+— A4 **cites** that taxonomy (atomicity/order violations) as its classification vocabulary; it is
+**not** re-added here. **A4 is mixed-status by design** (its file badge is `[Verified-adjacent]`): the
+*concurrent notional machine* (reason about the *set* of interleavings, not the one run) is
+`[Verified-adjacent]` because it extends a verified finding; the *formalism* it reasons with — the
+**happens-before** partial order and **sequential consistency** (Lamport) — is foundational CS
+**theory**, `[Practitioner-canon]`; and *what CPython's GIL makes atomic* is **documented fact**,
+`[Practitioner-canon]`. The coach must keep these apart, never present the theory/facts as an empirical
+*learning* result, and **never teach "Python is thread-safe."**
+
+**A4a — The concurrent notional machine `[Verified-adjacent]` (extends Finding 1).** No new source: A4
+removes A1's single-machine assumption (one program counter advancing deterministically) and replaces
+it with **N interleaved instruction streams** whose merge (the *interleaving*) is chosen by the
+scheduler, not the programmer. This is `[Verified-adjacent]` for the same reason C3's taxonomy half is
+— it *extends* the `[Verified]` execution-model finding (Finding 1; Sorva 2013; du Boulay 1986) into
+the concurrent setting on solid ground, **not** because "drilling interleaving-reasoning causally
+improves engineers" is shown (it is not — the open transfer question).
+
+**A4b — Happens-before & sequential consistency `[Practitioner-canon]` (foundational CS theory).**
+Rigorous definitions/models by the field's founding figure — exact *theory*, not empirical learning
+findings; badged as foundational canon in the same sense as Parnas 1972 (information hiding) and the
+Big-O cost models (D4c): the result is exact, its *use as a reasoning method* is craft. The coach says:
+*"foundational, rigorously-established CS theory — not a verified result that teaching it improves your
+code."*
+
+- Lamport, L. (1978). Time, Clocks, and the Ordering of Events in a Distributed System. *Communications
+  of the ACM*, 21(7), 558–565. doi:10.1145/359545.359563. `[Practitioner-canon]` (foundational) —
+  Origin of the **"happened-before" relation** (`→`), a **partial ordering** of events: program order
+  within a process; a message send before its receipt; transitivity. Two events with **no `→` path
+  either way are *concurrent*** (neither can causally influence the other). A4 uses the standard
+  shared-memory specialization — program order within a thread; `start`→the thread; the thread→`join`;
+  lock release→a later acquire; `Event.set()`→an observing `wait()`; queue `put`→`get` — to decide what
+  is **ordered** vs **genuinely concurrent** (and so where a **data race** can occur). Among the work
+  recognized by Lamport's 2013 Turing Award; one of the most-cited papers in CS.
+- Lamport, L. (1979). How to Make a Multiprocessor Computer That Correctly Executes Multiprocess
+  Programs. *IEEE Transactions on Computers*, C-28(9), 690–691. doi:10.1109/TC.1979.1675439.
+  `[Practitioner-canon]` (foundational) — The canonical definition of **sequential consistency**, in its
+  universally-reproduced form: *"the result of any execution is the same as if the operations of all the
+  processors were executed in some sequential order, and the operations of each individual processor
+  appear in this sequence in the order specified by its program."* A4 uses SC as the **intuitive model
+  A1 silently assumes** and makes explicit — and the reason **weaker** real-world memory models (and the
+  publish-via-flag pattern) are hazards absent a happens-before edge.
+
+**A4c — What CPython's GIL makes atomic `[Practitioner-canon]` (documentation, factual).** Documented
+facts about the **reference implementation**, *not* a language guarantee — the same status as C2's
+Python-docs/PEP citations.
+
+- **Python documentation — Programming FAQ, *"What kinds of global value mutation are thread-safe?"***
+  (docs.python.org/3/faq/library.html). `[Practitioner-canon]` (documentation, factual). Verbatim
+  (verified against the page during authoring): a **global interpreter lock (GIL)** "is used internally
+  to ensure that only one thread runs in the Python VM at a time"; Python "offers to switch among threads
+  only between bytecode instructions; how frequently it switches can be set via `sys.setswitchinterval()`";
+  therefore "**each bytecode instruction … is … atomic from the point of view of a Python program.**" The
+  page lists operations that **are** atomic (`L.append(x)`, `x = L[i]`, `D[x] = y`, `D1.update(D2)`,
+  `x = y`, `x.field = y`, …) and ones that are **not** (`i = i+1`, `L.append(L[-1])`, `L[i] = L[j]`,
+  `D[x] = D[x] + 1`). A4 grounds its GIL-atomicity drills here and adds the **bound**: the GIL is a
+  **CPython implementation detail** (PyPy/Jython differ; CPython 3.13 ships an experimental
+  **free-threaded / no-GIL** build, **PEP 703**, "Making the Global Interpreter Lock Optional in
+  CPython"), so it removes low-level *data races* (no torn reads) but **not** *race conditions* (lost
+  updates, check-then-act) — which is exactly why "the GIL makes Python thread-safe" is false.
+
+→ Drives module **A4** (concurrency mental models). The *model* (the concurrent notional machine; reason
+about the set of interleavings) is `[Verified-adjacent]` (extends Finding 1); the *formalism*
+(happens-before, sequential consistency — Lamport 1978/1979) is `[Practitioner-canon]` foundational CS
+theory; the *GIL facts* are `[Practitioner-canon]` documentation; and the *classification vocabulary*
+(atomicity vs order) is the **reused** Lu et al. 2008 taxonomy ([C3a](#production--concurrency-debugging-module-c3),
+`[Verified-adjacent]`). Sibling module **C3** owns *debugging* races (non-reproducibility, heisenbugs,
+observability) and references A4 softly; A4 owns the *model* C3's debugging runs on. The AI-era priority
+placing concurrency reasoning in the broader verification cluster (judging whether agent-generated
+concurrent code is correct under *all* schedules, not just the run it was tested on; spec §12) is
+`[Verified-adjacent]` — priority-steering, not proof. **Research note:** every executable sub-claim in
+A4's worked example and its nine tier exemplars is **real runner output** (Python 3.13.2), independently
+re-run from scratch during authoring and confirmed against the pasted keys — the deterministic
+**interleaving-set enumeration** (6 valid interleavings of two `+1`s; 2 correct, 4 lose an update), the
+**forced** `Event` interleavings (the lost update → `1`; the use-before-init read → `KeyError`; the
+check-then-act → `compute` runs twice; the deadlock → runner **timeout**), and the **disassembly**
+showing a read-modify-write is `BINARY_SUBSCR … STORE_SUBSCR` (a read then a separate write) while an
+atomic store is a single `STORE_SUBSCR`. Because concurrency correctness is a property of *all* schedules,
+the runner is used only to **prove a bug exists on a forced/enumerated schedule** (never to certify a fix
+over all interleavings) and the *reasoning* is rubric-graded, named out loud as softer than A1's
+executable pass. **Citations verified:** Lamport 1978 (CACM 21(7):558–565; doi:10.1145/359545.359563) and
+Lamport 1979 (IEEE TC C-28(9):690–691; doi:10.1109/TC.1979.1675439) confirmed against the ACM Digital
+Library / IEEE catalog records; the sequential-consistency definition cross-checked verbatim against two
+authoritative secondary sources (its universally-reproduced form). The Python FAQ text was confirmed
+verbatim against docs.python.org. **Flagged honestly:** both Lamport primary PDFs rendered as
+corrupted/binary text via automated fetch in this pass, so the *exact verbatim phrasing* of Lamport
+1978's "concurrent" definition and Lamport 1979's SC sentence was **not extracted from the primary PDF
+directly** — the citations/DOIs/pages are confirmed against the publisher records, the SC quote against
+secondary sources matching the canonical form, and the happens-before content is standard textbook CS;
+A4 paraphrases the happens-before relation rather than quoting it.
+
+### Large-codebase comprehension (module E1)
+
+Extends the **`[Verified]`** comprehension findings already in this file — [Finding 2](#2-expertise-is-better-representation-experts-chunk-code-into-larger-semantic-units-verified) (chunking), [Finding 3](#3-beacons-and-programming-plans-are-real-cues-experts-exploit-verified) (beacons/plans, where **Storey 2005/2006** already lives), and [Finding 6](#6-reading--tracing--writing-is-a-developmental-hierarchy-verified) (reading→tracing→writing) — **one grain up**, from the line/function to the file/module: a directory tree is a chunk map; `routes.py`/`models.py`/`__main__.py`/`tests/`/high-churn files are repo-scale beacons; and you trace one cross-file path rather than the whole system. **E1 is mixed-status** (file badge `[Verified]`): those *mechanisms* are `[Verified]`, but the evidence is from people comprehending a **single program/function** — applying them at repository grain is a **reasonable extension, not a separately verified result** — and the **seven-step orient procedure** itself is `[Practitioner-canon]` craft. The coach keeps the two apart and never presents the procedure as a measured result. (Feathers, *Working Effectively with Legacy Code* is already on the [reading spine](#reading-spine-book-canon) as E1's staff anchor; itemized below.)
+
+**E1a — Strategic code reading & the orient procedure `[Practitioner-canon]` (craft).** Respected, widely-taught practice for reading large, real code in priority order — not an effectiveness experiment. The coach says: *"respected practice — not a verified research finding."*
+
+- Spinellis, D. (2003). *Code Reading: The Open Source Perspective.* Addison-Wesley (Effective Software Development Series, Vol. 1). ISBN 978-0-201-79940-8. `[Practitioner-canon]` — the canonical text on reading **large, unfamiliar** codebases *strategically*: start from the entry points, build/configuration files, and the **directory structure as a map**, and read **for what you need, in priority order** rather than end-to-end. 600+ real-world examples; Software Development Productivity Award (2004). The craft anchor for E1's "orient, don't crawl." *(Verified during E1 authoring: title, publisher, series, ISBN-13 978-0-201-79940-8, and 2003 date confirmed against the Pearson catalog and the Internet Archive copy.)*
+- **The orient procedure** (README → directory-tree → entry points → tests-as-spec → core modules → git-churn → gateway artifact) is **adapted from the `orient` module by Dr. Michael Mullarkey**, in Cat Hicks' *Learning Opportunities* (CC-BY 4.0; see [Attribution](#attribution)). `[Practitioner-canon]` — **credited**; E1 grounds each step in the `[Verified]` mechanisms above. *(The broader Storey program-comprehension survey that situates beacons/plans is already cited under [Finding 3](#3-beacons-and-programming-plans-are-real-cues-experts-exploit-verified); not re-added here.)*
+
+**E1b — The gateway artifact / developer documentation `[Practitioner-canon]` (empirical study of practice).** A field study of how open-source documentation is created and evolved — descriptive practice data, not a controlled learning result.
+
+- Dagenais, B., & Robillard, M. P. (2010). Creating and evolving developer documentation: understanding the decisions of open source contributors. *Proceedings of the 18th ACM SIGSOFT International Symposium on the Foundations of Software Engineering (FSE 2010)*, 127–136. doi:10.1145/1882291.1882312. `[Practitioner-canon]` — an interview-and-document-history study of open-source projects finding that developer documentation is a **deliberately created and evolved artifact** whose authors make explicit decisions about what a **newcomer needs to orient**. Grounds E1's **gateway-artifact** step (the one doc/file that unlocks the rest). **⚠ Honesty flags:** (1) **"gateway artifact" / "the one file that unlocks the rest" is the curriculum's framing of the orient procedure, NOT a verbatim term from the paper** — E1 says so in-text. (2) Author, venue, year, and **page range 127–136** are confirmed (the author's own publications list + the dblp/ACM record); the *abstract* could not be opened against the primary PDF in this pass (ACM DL and ResearchGate returned HTTP 403), so the study's exact method counts are **deliberately not cited** — the module characterizes the finding qualitatively (cite less, not more). (3) A study of *practice*, not a causal effectiveness result.
+
+**E1c — Orienting in untested / legacy code `[Practitioner-canon]` (the no-docs corner).**
+
+- Feathers, M. C. (2004). *Working Effectively with Legacy Code.* Prentice Hall. ISBN 978-0-13-117705-5. `[Practitioner-canon]` — already on the [reading spine](#reading-spine-book-canon) as E1's staff anchor; itemized here for the claims E1 cites. When a repo has **no README and no tests**, you orient from **structure + change history**, find a **seam**, and pin behavior with a **characterization test** before changing anything (the quirks may be load-bearing). The discipline for the stripped-cue corner of the orient procedure. *(Origin-of-record for "legacy code is code without tests" and the characterization test; cited as concepts, not independently page-pinned — same status as the D3 refactoring subsection.)*
+
+→ Drives module **E1** (large-codebase comprehension). The *mechanisms* (chunk at file grain; structural beacons; trace one cross-file path) are `[Verified]` extended one grain up (Findings 2/3/6 — **cited, not re-derived**); the *orient procedure* (and **git-churn-as-core-finder**, cited as a useful heuristic with **no effect size** — cite less, not more) is `[Practitioner-canon]` (Spinellis 2003; the `orient` module, Mullarkey; Dagenais & Robillard 2010; Feathers 2004). The AI-era priority placing E1 in the verification cluster (engineers inherit large, unfamiliar, agent-generated repos; *unaided* comprehension atrophies first — Anthropic RCT, ~17% lower, already in [AI-era impact](#ai-era-impact-202627-verified-adjacent)) is `[Verified-adjacent]` — priority-steering, not proof. **Research note:** every *test-as-executable-spec* sub-claim in E1's worked example and its nine tier exemplars is **real runner output** (Python 3.13), independently re-run from scratch during authoring and confirmed against the pasted keys; because orienting is a *strategy*, the runner is used only to pin the one executable sub-claim — *what a module does* — by collapsing the module + its test into a single runnable file, while the orientation **map** (entry/core/feature-location/first-file) is rubric-graded against the golden exemplars and named out loud as softer than an executable pass.
+
+### Architectural & technical judgment (module E2)
+
+**E2 is `[Practitioner-canon]` by design — the softest-graded module in the curriculum.** Its
+substance is respected, widely taught *engineering judgment*, vetted against the named sources
+during authoring — **not** an empirical finding. There is **no executable ground truth for a
+design tradeoff** and usually **no single right answer**; the coach grades the *reasoning*
+(named the tradeoff on both sides? the failure mode? the cost? what breaks first?) against a
+rubric + exemplars, and uses the runner only to prove a **named failure mode is real** (a retry
+double-charges; a cache goes stale; an unbounded wait hangs), **never** to decide which design
+is right. Unlike B3/D2/C3, E2 has **no `[Some empirical]` content layer to borrow** — the coach
+must never dress these judgments as science. (Ousterhout's *A Philosophy of Software Design* —
+strategic vs tactical — is **reused from [D1a](#managing-complexity--abstraction-module-d1)**, not
+re-added here; Kleppmann's *Designing Data-Intensive Applications* is already on the
+[reading spine](#reading-spine-book-canon) as the E2 staff anchor and is itemized below.)
+
+**E2a — The three concerns + tradeoff framing `[Practitioner-canon]` (craft).**
+
+- Kleppmann, M. (2017). *Designing Data-Intensive Applications: The Big Ideas Behind Reliable,
+  Scalable, and Maintainable Systems.* O'Reilly. ISBN 978-1-449-37332-0. `[Practitioner-canon]` —
+  Source of E2's scaffolding, confirmed during authoring: the **three concerns** every system is
+  judged against — **reliability** (*"continue to work correctly … even in the face of
+  adversity"* — faults and human error), **scalability** (reasonable ways to cope with growth in
+  data/traffic/complexity), **maintainability** (operability, simplicity, evolvability); the
+  **fault vs. failure** distinction (a *fault* is one component deviating from spec; a *failure*
+  is the system as a whole stopping service — you cannot eliminate all faults, so you build
+  **fault-tolerance** to stop a fault becoming a failure, and may deliberately *induce* faults,
+  e.g. Chaos Monkey, to prove it); the discipline of **describing load and performance** (load
+  parameters; response-time percentiles and tail latency, not a misleading average) *before*
+  claiming a design "scales"; and above all the *method* — there is **no universally right
+  answer**, you reason about **tradeoffs**. That tradeoff-analysis stance *is* this module.
+  Respected systems craft, **not** a controlled study.
+
+**E2b — Designing for failure: the Fallacies of Distributed Computing `[Practitioner-canon]`
+(attributed folklore).** The canonical checklist of false assumptions that make a design fragile
+the moment it crosses a process boundary. Originated at **Sun Microsystems**: **L. Peter Deutsch**
+articulated seven (c. 1994, incorporating four that **Bill Joy and Dave Lyon** had named) and
+**James Gosling** added the eighth (c. 1997): **(1) the network is reliable; (2) latency is zero;
+(3) bandwidth is infinite; (4) the network is secure; (5) topology doesn't change; (6) there is
+one administrator; (7) transport cost is zero; (8) the network is homogeneous.** Standard
+explanatory reference: **Rotem-Gal-Oz, A. (2006). *Fallacies of Distributed Computing Explained.***
+**⚠ Provenance flag:** there is **no single canonical primary publication** — the list propagated
+as an internal/oral Sun list, so this is *attributed folklore*, cited as origin-of-record with the
+Rotem-Gal-Oz essay as the explanatory source. The coach presents it as a respected checklist with
+honest provenance, **not** a sourced theorem.
+
+**E2c — When *not* to build: YAGNI `[Practitioner-canon]` (craft).**
+
+- "You Aren't Gonna Need It" — the Extreme Programming maxim (Beck/Jeffries; the XP practice of
+  **Simple Design**) against building **presumptive features**. Load-bearing modern statement:
+  **Fowler, M. (2015, 26 May). *Yagni* (bliki, martinfowler.com).** `[Practitioner-canon]` —
+  Confirmed verbatim during authoring: a presumptive feature is *"any code that supports a feature
+  that isn't yet being made available for use"*; building it on spec costs **build / delay / carry
+  / repair**, where **cost of carry** is *"the code for the presumptive feature adds some
+  complexity … this complexity makes it harder to modify and debug that software, thus increasing
+  the cost of other features."* **Crucial nuance, verbatim:** *"Yagni only applies to capabilities
+  built into the software to support a presumptive feature; it does not apply to effort to make the
+  software easier to modify."* So YAGNI is **not** "never abstract / never leave a seam" —
+  refactoring and keeping code malleable are how YAGNI stays safe (the "design for the change you
+  can name" half of E2). Craft maxim, not an experiment.
+
+→ Drives module **E2** (architectural & technical judgment). The *concerns and tradeoff method*
+are `[Practitioner-canon]` (Kleppmann); the *failure checklist* is `[Practitioner-canon]`,
+attributed folklore (the fallacies — Deutsch/Gosling/Sun; Rotem-Gal-Oz 2006); the *don't-build-it
+half* is `[Practitioner-canon]` (YAGNI — Beck XP; Fowler 2015); the *investment stance* is reused
+from D1a (Ousterhout, strategic vs tactical). **There is no empirical half** — the coach never
+says "research shows," and the runner proves only that a named **failure** is real, never that a
+**tradeoff** is the right call. The AI-era priority placing E2 in the verification cluster (judging
+whether a fluent, confident, often *over-engineered* agent-proposed architecture is sound rises as
+agents draft code and designs; spec §12; ties D1/E3/F1) is `[Verified-adjacent]` — priority-steering,
+not proof.
+
+**Research note (verified against primary sources where one exists; flags recorded).** Kleppmann's
+**three concerns** and the **fault vs. failure** distinction were confirmed (publisher record +
+multiple Chapter-1 summaries); the ISBN 978-1-449-37332-0 was confirmed against the publisher/Amazon
+records. **Flag:** finer Chapter-1 specifics cited as framing — *load parameters*, response-time
+**percentiles / tail latency**, and the **operability / simplicity / evolvability** triad — are
+well-established DDIA Ch.1 content confirmed via secondary summaries but **not re-pinned page-by-page
+to the primary text** in this pass; the module cites them as Kleppmann's framing, not as page-pinned
+quotes. The **Fowler *Yagni*** date (26 May 2015), the presumptive-feature definition, the four
+costs, the **cost-of-carry** quote, and the **refactoring-nuance** quote were confirmed **verbatim**
+against martinfowler.com/bliki/Yagni.html. The **Fallacies** attribution (Deutsch's seven c. 1994
+incorporating Joy & Lyon's four; Gosling's eighth c. 1997; Sun Microsystems) and the eight-item list
+were confirmed against the standard references; **flag:** there is **no single primary publication**
+(attributed folklore), and the Rotem-Gal-Oz 2006 PDF body did not render for direct text extraction
+(author "arnonrgo" / 2006 confirmed via PDF metadata; the list and attribution sourced from
+secondary consensus) — recorded honestly rather than asserted as a pinned primary. Every failure-mode
+anchor in E2's worked example and its nine tier exemplars is **real runner output** (Python 3.13),
+independently re-run from scratch during authoring and confirmed against the pasted keys; because a
+design verdict is *not* executable ground truth, the runner pins only **behavioral** sub-claims (a
+retry double-applies; a cache returns stale data; an unbounded wait yields `status: timeout`; a
+partial failure splits state; an out-of-order delivery corrupts; two designs are behaviorally
+identical today), and the *tradeoff verdict* is rubric-graded, named out loud as the softest grading
+in the curriculum.
+
+### Learning new languages & frameworks — transfer of learning (module F3)
+
+**F3's general transfer science is `[Verified]` *as general cognitive/educational
+psychology*; the programming-specific transfer is `[Verified-adjacent]`** (extrapolated). It
+rests on **Finding 1** (the notional machine it *ports* — already verified above; do **not**
+re-derive) and is fenced by the **Gilmore & Green 1988** notation-dependence result (already
+in [Refuted under verification](#refuted-under-verification) and the Finding 3 caveat — the
+*false-friend* anchor; **reuse, do not re-add**). The coach says: *"transfer of learning is
+solid learning science in general; the programming-specific evidence is thinner — and the
+analogy you map with can be a false friend."*
+
+- Thorndike, E. L., & Woodworth, R. S. (1901). The influence of improvement in one mental
+  function upon the efficiency of other functions. *Psychological Review*, 8, 247–261 (Part I
+  of a three-part 1901 series). `[Verified]` (general; foundational) — the **identical-
+  elements** theory: one function transfers to another *"spread of practice occurs only where identical elements are concerned in the influencing and influenced function."* The mechanism behind
+  both halves of F3 at once: the parts a new language **shares** with one you know (sequencing,
+  branching, call/return, arithmetic) transfer for **free**; the non-shared, notation-specific
+  parts do **not** — and *look like they should* (**false friends**). *(Verified against the
+  primary text via Classics in the History of Psychology and the gwern PDF; the 1901 identical-elements wording confirmed (the popular "in so far as ... in part identical" formulation is actually from Thorndike 1906, *The Principles of Teaching*, not this 1901 paper). Part I = pp. 247–261; the exact page ranges of Parts II and III
+  were not separately pinned in this pass — the module cites only Part I and the direction.)*
+- Salomon, G., & Perkins, D. N. (1989). Rocky roads to transfer: Rethinking mechanisms of a
+  neglected phenomenon. *Educational Psychologist*, 24(2), 113–142.
+  doi:10.1207/s15326985ep2402_1. `[Verified]` (general) — **near vs. far** transfer and
+  **low-road** (reflexive, from extensive/varied practice) vs. **high-road** (mindful,
+  deliberate abstraction) transfer. The reading F3 uses: the *closer* the new language, the
+  more transfers automatically — **and** the more dangerous an unchecked analogy becomes; the
+  more *distant* the paradigm, the more it needs the deliberate high road. *(Verified against
+  the Taylor & Francis journal record / DOI; the low-road/high-road definitions confirmed.)*
+- Singley, M. K., & Anderson, J. R. (1989). *The Transfer of Cognitive Skill.* Cambridge, MA:
+  Harvard University Press. ISBN 978-0-674-90340-1. `[Verified]` (general; **programming-
+  adjacent**) — the closest anchor to programming, and the honest limit of how close we can
+  get. Revives Thorndike's identical-elements in the ACT* framework: transfer is roughly
+  proportional to **shared productions** (shared procedural knowledge), demonstrated on
+  **text-editor** transfer and related cognitive skills. **Honest bound:** this is **1989, on
+  editors / small skills**, *not* modern frameworks — it makes the *direction* (transfer ∝
+  shared structure) credible for programming, **not** any quantitative promise about picking up
+  a new framework. *(Verified via the Harvard Univ. Press record and the CMU ACT-R publications
+  page; the ACT* "transfer ∝ shared productions / common elements" claim and the text-editor
+  transfer experiments confirmed. Specific experiment page numbers were not pinned; the module
+  cites only the direction.)*
+- Barnett, S. M., & Ceci, S. J. (2002). When and where do we apply what we learn? A taxonomy
+  for far transfer. *Psychological Bulletin*, 128(4), 612–637. doi:10.1037/0033-2909.128.4.612.
+  `[Verified]` (general) — the **honesty fence**. Surveying a century of work, the authors
+  conclude that whether **far** transfer reliably occurs is *still disputed*, and it frequently
+  **does not happen spontaneously**. This is *why F3 exists*: you cannot rely on osmosis to map
+  a new language — you must map **deliberately** and **verify**. *(Verified against PubMed
+  12081085 and the journal record; the "far transfer is unresolved/unreliable" conclusion and
+  the nine-dimension taxonomy confirmed.)*
+
+→ Drives module **F3** (learning new languages & frameworks fast). The machine it **ports** is
+`[Verified]` (Finding 1); **why** porting works is `[Verified]`-general transfer science
+(Thorndike & Woodworth 1901; Salomon & Perkins 1989; Singley & Anderson 1989) whose
+**programming-specific** application is `[Verified-adjacent]` (extrapolated — the evidence is
+general and old/editor-based, not modern-framework); **why** porting is unsafe is the
+**reused** Gilmore & Green 1988 notation-dependence (idioms are partly notation-specific →
+false friends) plus Barnett & Ceci 2002 (far transfer is unreliable and often fails to happen
+on its own). The **AI-era priority** placing "verify code in an unfamiliar stack" in the
+verification cluster (false-friend risk is highest, and fluent agent output most dangerous, in
+a language you don't yet own; spec §12) is `[Verified-adjacent]` — priority-steering, not
+proof. **Research note:** F3 is a **hybrid** module; every Python idiom in its worked example
+and nine tier exemplars is **real runner output** (Python 3.13, independently re-run from
+scratch during authoring and confirmed against the pasted keys), because the *run* is what
+**verifies the mapping** — a false friend is convicted by the machine, not asserted — while the
+*mapping judgment* (true/false friend / new / re-notated, plus the execution-model reason) is
+rubric-graded against the golden exemplars and named out loud as softer than an executable
+pass. The runner is **Python-only**, so the executable verification is *demonstrated* on Python
+idioms treated as "new," and the *principle* (a mapping is a hypothesis; verify it against
+ground truth) is taught as generalizing to stacks the runner cannot execute (where "the runner"
+becomes that language's REPL / unit test / spec).
+
+---
+
 ## Reading spine (book canon)
 
 The curriculum's book-length sources. These are **not** all peer-reviewed evidence;

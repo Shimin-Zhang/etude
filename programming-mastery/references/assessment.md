@@ -658,6 +658,284 @@ the printed example verbatim, so the battery can be re-run later with held-out i
 
 ---
 
+#### A4 — Concurrency mental models
+
+- **Shape.** Give a **small 2-thread snippet with a planted race** — a non-atomic shared counter
+  (`+=` / `D[x]=D[x]+1`), a check-then-act/cache-fill, or a use-before-init across two threads — and ask
+  the learner to **(1) describe (or enumerate) an interleaving that breaks the intended invariant,
+  (2) classify it (atomicity violation vs order violation; and, where relevant, data race vs race
+  condition), and (3) name the right-unit fix.** Bake in the **"the GIL makes this thread-safe, so no
+  lock is needed"** trap — the snippet should be one a learner is tempted to wave through because "it
+  printed the right answer."
+- **Scored.** *Product:* did they find a breaking interleaving (the breaking schedule is confirmed by
+  **running a forced `Event` interleaving** or **enumerating the tiny interleaving set**, not guessed)?
+  *Process — the primary signal:* did they **classify** the race correctly (atomicity = a region meant
+  to be indivisible was interleaved → fix: make the *whole* read-modify-write atomic; order = A-before-B
+  got flipped → fix: a *happens-before edge*), get the **GIL/memory-model status** right (a
+  read-modify-write is *not* atomic; the GIL is a CPython detail, not thread-safety; a green run is one
+  sample), and **target the fix at the right unit** rather than reflexively "add a lock"? A learner who
+  finds the race but **mis-classifies** it (e.g. calls a use-before-init an atomicity bug, or "fixes" an
+  order violation with a lock), or who accepts "it printed 200000 five times, so the GIL saved me,"
+  scores **lower on process** even if a symptom is named — because the misclassification sends the fix
+  the wrong way (Lu et al. 2008, Finding 2/9) and the GIL claim is the signature A4 error.
+- **Routes via** the A4 rubric (Part 2; module §7). Cannot describe a breaking interleaving / cannot
+  engage the schedule at all → **Foundations**; describes the interleaving and names the
+  read-modify-write window but **mis-classifies** atomicity-vs-order, reaches straight for a lock, or
+  over-trusts the GIL → **Working** (partial model to correct, per the Part 1.3 boundary — names the
+  mechanism but inverts the fix/timing); classifies correctly, gets the GIL/memory-model status right,
+  and targets the right-unit fix unaided → **Advanced**.
+- **Concrete example** (Foundations/Working boundary — non-atomic counter + the GIL trap):
+
+  ```python
+  import threading
+  counter = 0
+  def work():
+      global counter
+      for _ in range(100_000):
+          counter += 1
+  t1 = threading.Thread(target=work); t2 = threading.Thread(target=work)
+  t1.start(); t2.start(); t1.join(); t2.join()
+  print(counter)        # "always 200000 on my machine — so the GIL makes += safe, right?"
+  ```
+
+  Ask: "Is this correct, or just lucky? Is there an interleaving that loses an update — and does the GIL
+  save it?" Ground truth: enumerating the **6** interleavings of even a single pair of `+=`s shows
+  **4 lose an update** (runner-verified), and `counter += 1` disassembles to a read (`LOAD`)…write
+  (`STORE`) — *not* atomic — so the code is racy though it usually prints `200000` (the GIL makes the bad
+  schedule rare). The discriminating signal is **process**: does the learner answer the *sampling* claim
+  ("five green runs") with a *set* argument (the scheduler may produce a losing interleaving), classify it
+  as an **atomicity** violation, and fix the *whole* `+=` with a lock — rather than concluding the GIL made
+  it safe? Record the exact gap ("GIL = thread-safe" / "one green run as proof" / atomicity-vs-order) in
+  the tracker.
+
+- **Caveats baked in.** **(1) Grading is hybrid and explicitly softer than A1's executable grading** —
+  the coach can *force a schedule (or enumerate a tiny set) to prove a bug exists* and that a fix prunes
+  *that* schedule, but **cannot enumerate all interleavings**, so a passing forced repro after a fix is
+  *necessary, not sufficient*; the coach says so and grades the reasoning about the schedule space, not
+  just an output (module §5d; `drill-generation.md` §3). **(2)** A *naive* (unforced) racy snippet may
+  print the *correct* answer on a given run — that is the heisenbug / GIL-masking, **not** a refutation;
+  the coach demonstrates the bug via the **forced** interleaving or the **enumerated set** and states the
+  green run is one sample. **(3)** The model (concurrent notional machine) is `[Verified-adjacent]`
+  (extends Finding 1); the formalism (happens-before, sequential consistency — Lamport 1978/1979) is
+  `[Practitioner-canon]` foundational CS theory; the GIL facts are `[Practitioner-canon]` documentation
+  (a CPython detail, *not* "Python is thread-safe"); the atomicity/order taxonomy (Lu et al. 2008) is
+  `[Verified-adjacent]` descriptive field data — the coach never presents any of them above its badge.
+
+---
+
+#### E1 — Large-codebase comprehension
+
+- **Shape.** Present a **small multi-file repository AS TEXT** — a file tree plus the 3–5 key files — for a repo the learner hasn't seen (a CLI, a small web service, a library, or a data pipeline). Ask the learner to **orient and produce the four-part map: (1) the entry point, (2) the core module, (3) where they'd change a named feature X, and (4) the one file they'd open first — and why**, justifying each from a structural beacon (the `__main__`/`console_scripts`/route table; the most-imported file; the git-churn hot-spot) rather than a folder's name.
+- **Scored.** *Product:* is the map right — entry point (confirmable by tracing the import/call chain or the `console_scripts`/`__main__` beacon), core module (most-imported / churn hot-spot), and feature-X location (the module that **owns the behavior**, reached by tracing, not the first keyword hit)? *Process — the discriminating signal:* did the learner **orient strategically** (read the tree + entry + one test, chunk at the file level) or **crawl** (open the biggest/first file and read linearly), and did they justify entry/core by a **beacon/trace** or by a **folder name**? Naming `core/` as the core *because it's called core* — when the behavior disagrees — is the signature failure; trusting a folder name over the behavior routes lower even when the guess happens to be right.
+- **Routes via** the E1 rubric (Part 2; module §7). Per the partial-knowledge boundary (Part 1.3): **crawls file-by-file / names entry & core by folder name / "I'd have to read everything first," no map → Foundations** (the orient model needs building); **produces a map but locates feature X by its surface string (the route path / CLI word) instead of tracing to the owner, or names the core without a beacon/import justification → Working** (a partial method to correct — they orient but stop at the name); **produces the full four-part map unaided, traces feature X to the owning module, recovers the real entry/core when a name misleads (confirming by tracing or running a test), ranks the gateway file, and articulates the orient procedure → Advanced**.
+- **Caveats baked in.** **(1) Grading is mostly rubric and explicitly softer than A1/A3's executable grading** — orienting in a repo is a *strategy, not a computation*; the coach grades the map against the rubric + golden exemplars and says so out loud. **The one executable sub-claim** is *"what does module M do?"*: where the repo includes a test, the coach **collapses that module + its test into a single runnable file and runs it** (`drill-generation.md` §2) to confirm the behavior — and to **settle any "this folder is the core / this is the entry" dispute** (trace or run it; the behavior decides). **(2)** E1 is **mixed-status**: the comprehension *mechanisms* it uses (chunking, beacons, tracing) are `[Verified]` (`evidence-base.md` → Findings 2/3/6) but applied **one grain up** (line→file) as a reasonable extension, *not* a separately verified result; the **orient procedure** (the seven steps; git-churn-as-core-finder; the gateway artifact) is `[Practitioner-canon]` (Spinellis 2003; the `orient` module by Mullarkey; Dagenais & Robillard 2010; Feathers 2004) — the coach **never** presents it as "research shows."
+- **Concrete example** (Working boundary — the feature lives one trace-hop from where it's named):
+
+  ```
+  shop/
+  ├── README.md            #  flask --app shop.app run
+  ├── shop/
+  │   ├── app.py           #  create_app(); registers routes
+  │   ├── routes.py        #  @bp.route("/checkout") -> apply_discount(...)
+  │   ├── pricing.py       #  apply_discount(subtotal, code)   <- the discount RULE
+  │   └── models.py        #  Cart, LineItem
+  └── tests/
+      └── test_pricing.py
+  ```
+
+  Ask: "Orient — entry point, core module, and to **add a `BLACKFRIDAY` discount code**, which file do you change? Which would you open first?" The coach obtains ground truth for the one executable sub-claim by **running `pricing.py` + `test_pricing.py`** (collapsed into one file): `apply_discount(100, "SAVE10") -> 90.0`, `apply_discount(100, "HALF") -> 50.0` (the rules + a 50% cap live in `pricing.py`). The discriminating signal is **process**: does the learner **trace** `POST /checkout` (routes) → `apply_discount` (pricing) and put the new code in **`pricing.py`** — or answer **`routes.py`** because the endpoint named "checkout" is there (locating the feature by its surface string)? A learner who says "change `routes.py`" has the central E1 gap — record it ("located the feature by the endpoint name, not by tracing to the owning module") in the tracker.
+
+---
+
+#### E2 — Architectural & technical judgment
+
+- **Shape.** Give **either** a single **design choice** (should we add this cache / queue /
+  service? is this call safe to retry? build this generic now or hardcode it?) **or** a small
+  **system + a proposed change**. Ask the learner to **defend the tradeoff, not a "correct"
+  answer**: *what does this **buy**, what does it **cost**, what **fails first** under change or
+  failure, and **would you build it**?* No code required; reasoning is the artifact.
+- **Scored.** *Product:* did they reach a **defensible verdict** and name the tradeoff on **both
+  sides** (a concrete benefit **and** its cost — carry cost, operational cost, and the **new
+  failure mode** it introduces), rather than a one-sided "it's faster / it scales / it's the
+  standard way"? *Process — the discriminating signal:* did they reason about the **unhappy path**
+  (which fallacy the design assumes; what breaks under retry / partial failure / reorder / load)
+  and **state a condition** under which the other choice wins — or did they **cargo-cult a
+  pattern** ("just use microservices / a cache / event sourcing") with no cost named, or judge the
+  design by a green happy-path demo? Naming the *new failure mode* and the *deciding condition*
+  unprompted is the strong-process signal.
+- **Routes via** the E2 rubric (Part 2; module §7). Judgment-graded against exemplars. Per the
+  partial-knowledge boundary (Part 1.3): **names only one side / cargo-cults a pattern with no cost
+  or failure mode → Foundations** (the tradeoff model needs building); **names the tradeoff but
+  one-sided, or names the benefit and cost but no failure mode / no condition → Working** (a partial
+  model to sharpen — they sense the tension but score one side); **names both sides, what breaks
+  first, **and** the condition under which each choice wins, owning the cost of their pick →
+  Advanced** (promote per the per-module rubric; combining a verdict with the condition and an owned
+  cost is the Advanced bar).
+- **Caveats baked in. (1) Grading is judgment-graded and the SOFTEST in the curriculum** — the
+  coach can *run a named failure mode to prove it is real* (a retry double-charges; a cache returns
+  stale data; an unbounded wait `status: timeout`s; two designs are behaviorally identical today),
+  but **"is this the right architecture?" is not a computation and usually has no single right
+  answer**; the coach grades the *reasoning* against the rubric + exemplars and **says so out loud,
+  louder than any other module** (`drill-generation.md` §3; module §5d). The runner proves
+  **failures, never verdicts**. **(2)** There is **no single correct design** — the rubric rewards
+  a *well-reasoned tradeoff with a named condition* (and the honest "it depends, *and here's the
+  deciding factor*"), not matching a template. **(3)** E2 is **`[Practitioner-canon]` — pure
+  craft** (Kleppmann's *Designing Data-Intensive Applications*; the Fallacies of Distributed
+  Computing; YAGNI; Ousterhout's strategic/tactical), with **no empirical half**; the coach
+  **never** says "research shows," and never treats the fallacies (attributed folklore) as a proven
+  theorem.
+- **Concrete example** (Foundations/Working boundary — a component whose benefit is obvious and
+  cost is hidden):
+
+  ```python
+  # Reads of a price are "slow"; a teammate proposes a read-through cache over the
+  # source of truth. The source can change.
+  source = {"price": 100}
+  cache = {}
+  def get_price_cached(key):
+      if key not in cache:
+          cache[key] = source[key]     # populate once, never invalidate
+      return cache[key]
+  ```
+
+  Ask: "A cache makes reads faster — so is this a clear win? What does it **buy**, what does it
+  **cost**, what **breaks first**, and would you ship it as written?" The coach obtains ground truth
+  for the **failure mode** by **running** it: after `source["price"] = 130`, the cache still serves
+  `100` (`stale? True`) — a stale read, a new *correctness* failure mode, not just a latency win.
+  The runner proves the staleness is real; it does **not** decide whether the cache is worth it. The
+  discriminating signal is **process**: does the learner name the **staleness cost and invalidation
+  burden** (not just "faster"), and state the **condition** — a cache here is worth it *only if*
+  stale reads are tolerable for a bounded window (add a TTL) or you can invalidate on write; if reads
+  must be current, it's the wrong tool? A learner who says "yes, caching is faster" and stops has
+  **scored one side of the tradeoff** — record that exact gap ("cost-blind; named the benefit, not
+  the new failure mode") in the tracker. Strong answers name the stale-read failure, the
+  invalidation/carry cost, and the staleness-tolerance condition.
+
+---
+
+#### F2 — Designing your own practice
+
+- **Shape.** Give the learner a **described practice routine with anti-patterns baked in**
+  (not code — a paragraph describing how someone practices). Ask them to **critique it against
+  the five levers of well-designed practice — QUALITY (generate, don't re-read) · FEEDBACK
+  (check against external ground truth) · TARGETING (aim at your edge) · DESIRABLE DIFFICULTY ·
+  SPACING — name the highest-leverage fix, and redesign it.** The meta-skill is turning the
+  curriculum's own design principles back on the learner's practice.
+- **Scored.** *Product:* did they **catch the material anti-patterns** (passive re-reading,
+  self-grading, grinding the comfortable, massing/cramming, **hour-dosing / streak-chasing**,
+  trusting AI output by plausibility) — and **not** "fix" a genuinely-good element — and produce
+  a redesign that **flips the levers** rather than "do more hours"? *Process — the discriminating
+  signal:* did they reason from the **principles** (generation, ground-truth feedback, targeting,
+  desirable difficulty, spacing; *felt-ease is an anti-signal*; *hours are an input, not learning*)
+  rather than "just practice harder / longer"? Naming a **held-out measure** ("a kind of problem
+  I'll attempt cold before and after") instead of hours/streaks is a strong-process signal.
+- **Routes via** the F2 rubric (Part 2; module §7). Judgment-graded against exemplars. Per the
+  partial-knowledge boundary (Part 1.3): **can't engage the design frame at all / "just do more
+  problems" with no lever named → Foundations** (the model needs building); **names one real
+  anti-pattern but proposes a vague or partial fix, reaches for "more hours/problems," or misses
+  the streak/hours-as-metric framing → Working** (a partial model to correct); **catches the mix
+  including the hours/comfort framing, prioritizes the highest-leverage fix, redesigns flipping
+  the levers, and explains *why* — incl. that there is no single correct plan → Advanced**.
+- **Caveats baked in.** **(1) Grading is judgment-graded and explicitly softer than A1/C1's
+  executable grading** — "is this practice well-designed?" is **not a computation** and **there
+  is no single correct plan**; the coach grades the located anti-patterns and the redesign against
+  the rubric + exemplars and says so out loud. The *one* executable sub-claim: where the redesign
+  turns a passive element into **predict-then-check**, the coach **runs the embedded snippet** to
+  show the redesign now has external ground truth (surface-ground-truth discipline). **(2)** F2 is
+  **`[Verified]` general learning science** (the instructional pillar — generation/testing,
+  spacing, desirable difficulties, worked examples + expertise reversal, learning ≠ performance,
+  metacognition), but the **programming-specific causal payoff is the open question** the whole
+  curriculum carries — the coach grades the *reasoning against the principles*, never a promise
+  that "this plan makes you X% better." **(3)** The **deliberate-practice-dominance / "10,000-hour"
+  thesis is REJECTED folklore** (Macnamara et al. 2014 — DP ≈ 12% of variance, ~1% in professions;
+  numbers from music/sports/chess, not software; Gobet & Campitelli 2007 ~8× spread) **and the
+  magnitude is itself disputed** — the coach must **never grade toward hour-counting**, and must
+  not let the learner swing to the opposite overclaim ("practice is pointless"); *Peak* is read
+  critically.
+- **Concrete example** (administer or vary — an AI-era routine where hours/comfort and
+  trust-by-plausibility are the traps):
+
+  > *"To get better I let the AI write the solution, I read it, and if it looks right I move on. I
+  > do about 30 problems a session this way, three sessions back-to-back on Saturday. I keep a
+  > streak counter — I'm on day 40. I only do problems in the topic I'm already strong at
+  > (dynamic programming) because I can get through them fast and it keeps the streak alive."*
+
+  Ask: "Critique this against the five levers. What's the most important fix, and how would you
+  redesign it?" There is **no single correct answer**; the coach grades the diagnosis + redesign
+  against the rubric. The baked-in anti-patterns: **trust-by-plausibility** ("looks right," no
+  prediction/verification — no generation, no feedback), **massing** (three back-to-back Saturday
+  sessions, not distributed), **grinding the comfortable** (only the already-strong topic), and
+  **streak/hour-dosing as the metric** ("day 40"). The discriminating signal is **process**: a
+  learner who says "great, very efficient — maybe add a fourth session" was sold by the fluency
+  and is **hour-dosing** (record the gap: "trusted AI plausibility; measured practice by a
+  streak"); a learner who leads with *predict-then-verify on unseen problems*, spaces the
+  sessions, retargets to the weak topic, and **replaces the streak with a held-out cold re-test**
+  has the skill. Where the redesign turns "accept what looks right" into "predict, then run the
+  edge case," the coach **runs the AI's function** through the runner and surfaces the output, so
+  the verification lever is grounded in real behavior, not opinion.
+
+---
+
+#### F3 — Learning new languages & frameworks fast
+
+- **Shape.** Give a short **Python** idiom/snippet the learner likely treats as "new," and
+  name a language they know (or ask which they know best). Ask them to **(1) map the construct
+  onto something in a language they already know, (2) predict its behavior under that analogy,
+  and (3) say what they expect to be the *same* and what might be *different*.** Then the coach
+  **runs it** and the learner reconciles — catching where the analogy breaks. No writing
+  required.
+- **Scored — two verdicts, reported separately (the module is hybrid, §5d).** *Product
+  (executable):* is the predicted behavior right when the coach **runs** it (its `stdout` /
+  *whether it raises* / an identity)? *Mapping (rubric):* did they name a sensible source
+  analogy, **classify** the construct (**true friend / false friend / genuinely new / re-notated
+  idiom**), and give the **execution-model reason** it holds or breaks — not just report the
+  source-language behavior? *Process:* did they treat the analogy as a **hypothesis to verify**
+  (predict-then-run) rather than a conclusion (transliterate)? A correct prediction the learner
+  *already knew* (they happen to know Python) is product-without-process — re-probe with a
+  construct they haven't seen.
+- **Routes via** the F3 rubric (Part 2; module §7), applying the partial-knowledge boundary
+  (Part 1.3): cannot engage the mapping / reports the source behavior with no execution-model
+  reason → **Foundations**; names the right mechanism but **inverts** its timing/semantics
+  (e.g., "the default is a fresh list each call," "`is` checks value") → **Working** (a partial
+  model to correct); maps correctly, classifies, gives the execution-model reason **and** the
+  repaired mapping, unaided → **Advanced**.
+- **Caveats baked in. (1)** Grading is hybrid: the prediction is **executable ground truth**
+  (the coach **runs** it and surfaces the output — a false friend is convicted by the machine,
+  not asserted), while the **mapping** is rubric + exemplars and explicitly **softer**. **(2)**
+  The runner is **Python-only**, so the task uses a Python idiom as the "new language"; the
+  *skill* (map-then-verify) generalizes to stacks the runner can't execute, where verification
+  moves to that language's REPL/tests — **naming that step is part of the skill**. **(3)** F3 is
+  `[Verified-adjacent]`: transfer-of-learning is well-established **general** cognitive science
+  with **thin** programming-specific evidence, and the mapping is fenced by the notation-
+  dependence result (Gilmore & Green 1988) — analogies can be **false friends**; the coach never
+  presents "you'll learn languages faster" as proven.
+- **Concrete example** (Foundations/Working boundary — a false friend mapped from "fresh
+  locals"):
+
+  ```python
+  def collect(item, into=[]):
+      into.append(item)
+      return into
+
+  print(collect("a"))
+  print(collect("b"))
+  ```
+
+  Tell a learner who knows **C++ / Java / JavaScript**: "In the languages you know, a parameter
+  default / local is fresh each call. Map `into=[]` onto that, and predict the two printed
+  lines." The coach obtains ground truth by **running** it — it prints `['a']` then
+  `['a', 'b']` (the list **persists**), **not** `['a']` then `['b']`. The discriminating signal
+  is **process + mapping**: does the learner see that `into=[]` is evaluated **once at
+  definition time** and **shared** across calls (a false friend — the "fresh each call" analogy
+  breaks), and name the repaired idiom (`into=None; into = [] if into is None else into`)? A
+  learner who predicts `['a']`/`['b']` and explains "defaults are set up fresh each call" has
+  the mechanism named but the **timing inverted** → **Working**; one who cannot engage the
+  mapping at all → **Foundations**; one who predicts the persistence, explains definition-time
+  evaluation, and gives the repair → **Advanced**. Record the exact gap ("mapped a parameter
+  default as call-time/fresh — false friend from another language's locals").
+
+---
+
 ### 1.5 Reporting the result to the learner
 
 After the battery (or the spine), the coach reports per skill:

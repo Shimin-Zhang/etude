@@ -79,14 +79,13 @@ confirmed"). The verified claim is narrow and exactly what this module teaches: 
 and explaining are real, separately-trainable comprehension skills that sit developmentally
 below writing and predict it.**
 
-> **Citation precision — one correction, flagged not silently fixed.** Per the standing
-> rule (`evidence-base.md` → "cite less, not more; flag, don't inflate"): the evidence
-> base's Finding 6 currently notes "R² ≈ 0.66 across the skills" for Lopez et al. 2008.
-> The fact-checked primary source supports the **46% combined variance** figure verbatim,
-> but **does not state an overall model R² of 0.66** — that value matches the *correlation*
-> r = 0.6267 between iterative-tracing and writing in the same paper, which is a different
-> quantity. **This module cites only the confirmed 46% figure** and avoids "R² ≈ 0.66."
-> See the Report's "new/corrected citations" note. No number is invented here.
+> **Citation precision — the corrected figure.** Per the standing rule
+> (`evidence-base.md` → "cite less, not more; flag, don't inflate"): Finding 6 cites the
+> **46% combined variance** (R² = 0.46) for Lopez et al. 2008 — the figure the fact-checked
+> primary source supports verbatim. (An earlier draft of the evidence base carried
+> "R² ≈ 0.66 across the skills"; that was **corrected**, because 0.66 is not the overall
+> model R² but the *correlation* r = 0.6267 between iterative-tracing and writing — a
+> different quantity.) **This module cites only the 46% figure** and avoids "R² ≈ 0.66."
 
 **Read through the transfer caveat.** Like all `[Verified]` findings here, the primary
 evidence is from **novices in introductory courses** (BRACElet, ~2004–2009, Java/Python).

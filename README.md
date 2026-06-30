@@ -75,3 +75,11 @@ Requires Python ≥ 3.11. Adding a module is a documented, repeatable operation 
 ## Credits
 
 The learning-science delivery disciplines (pause/no-spoiler, pre-testing, fading scaffolding, desirable difficulty), the affective self-report measures, and the `orient` codebase-orientation procedure are adapted from **Cat Hicks'** *Learning Opportunities* skill and **Michael Mullarkey's** *orient* companion ([github.com/DrCatHicks/learning-opportunities](https://github.com/DrCatHicks/learning-opportunities)). Their principles are CC-BY-4.0; their survey measures are CC-BY-SA-4.0. See `docs/superpowers/specs/` §13 for the full attribution table.
+
+## License
+
+Étude is licensed under the **[Creative Commons Attribution 4.0 International License (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/)** — you may share and adapt it, including commercially, as long as you give appropriate credit, link the license, and indicate any changes. The full legal text is in [`LICENSE`](LICENSE).
+
+**Attribution:** "Étude by Shimin Zhang, CC BY 4.0" (with a link back to this repository).
+
+**ShareAlike exception.** The developer survey/assessment measures reproduced verbatim in `etude/references/assessment.md` (§6) — Developer Thriving / Learning Culture, AI Skill Threat, and Coding Self-Efficacy — are adapted from **Cat Hicks et al.** and remain under **[CC-BY-SA-4.0](https://creativecommons.org/licenses/by-sa/4.0/)**. The ShareAlike term binds *those specific items and any derivative of them* (you must release such derivatives under CC-BY-SA-4.0), not the rest of Étude. Attribution and citations for the measures are in `assessment.md` §6.1.

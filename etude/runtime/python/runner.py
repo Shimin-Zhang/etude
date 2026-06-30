@@ -1,4 +1,4 @@
-# programming-mastery/runtime/python/runner.py
+# etude/runtime/python/runner.py
 """Sandboxed execution of Python snippets for drill ground-truth.
 
 v1 threat model: this runs coach-generated drill snippets and the learner's own

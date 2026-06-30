@@ -1,4 +1,4 @@
-# Evidence Base — Programming Mastery
+# Evidence Base — Étude
 
 The grounding document. Every module's evidence badge and every citation the coach
 makes traces back to here. This file exists to keep the curriculum **honest**: it

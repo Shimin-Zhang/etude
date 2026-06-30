@@ -131,7 +131,7 @@ The protocol is:
 ### Runner API
 
 ```python
-# programming-mastery/runtime/python/runner.py
+# etude/runtime/python/runner.py
 
 def run_snippet(code: str, *, timeout_s: float = 5.0, mem_mb: int = 256) -> RunResult:
     ...
@@ -172,10 +172,10 @@ Examples (same file, two install locations):
 
 ```bash
 # installed under ~/.claude/skills/
-python ~/.claude/skills/programming-mastery/runtime/python/runner.py snippet.py
+python ~/.claude/skills/etude/runtime/python/runner.py snippet.py
 
 # from a repo checkout (cwd = repo root)
-python programming-mastery/runtime/python/runner.py snippet.py
+python etude/runtime/python/runner.py snippet.py
 ```
 
 **Security note.** The runner is a robustness sandbox (timeout + address-space/CPU
@@ -213,8 +213,8 @@ The coach writes `snippet.py` with the above code, then runs (adjust the path to
 match the skill's install location — see §2 above):
 
 ```bash
-# installed:  python ~/.claude/skills/programming-mastery/runtime/python/runner.py snippet.py
-# repo root:  python programming-mastery/runtime/python/runner.py snippet.py
+# installed:  python ~/.claude/skills/etude/runtime/python/runner.py snippet.py
+# repo root:  python etude/runtime/python/runner.py snippet.py
 python <skill-dir>/runtime/python/runner.py snippet.py
 ```
 

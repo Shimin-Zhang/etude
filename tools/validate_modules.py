@@ -1,8 +1,8 @@
 # tools/validate_modules.py
-"""Validate that programming-mastery module files follow the required anatomy.
+"""Validate that etude module files follow the required anatomy.
 
 Usage:
-    python tools/validate_modules.py programming-mastery/modules/
+    python tools/validate_modules.py etude/modules/
 
 Exit 0 if all module files are valid; 1 if any problems (printed to stderr).
 """

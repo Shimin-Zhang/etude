@@ -1,4 +1,4 @@
-# Programming Mastery — Progress Tracker
+# Étude — Progress Tracker
 
 Within-person progress on defined skills. Not a certified expertise grade.
 

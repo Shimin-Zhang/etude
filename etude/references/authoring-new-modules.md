@@ -198,7 +198,7 @@ The single most important rule, and the one most likely to drift if you skip it:
 - **Executable drills:** **RUN every snippet through the runner and paste the real
   output as the key.** Never hand-assert what a snippet prints. Use:
   ```
-  python programming-mastery/runtime/python/runner.py snippet.py   # from repo root
+  python etude/runtime/python/runner.py snippet.py   # from repo root
   ```
   and copy the real `stdout` / `status` from the JSON. This applies to the worked example
   (§4), every exemplar (§6), and every drill the spec implies.
@@ -217,7 +217,7 @@ If a snippet won't run (syntax error, unavailable import), fix it before it ship
 
 Before you consider the module done:
 
-- **Validator passes:** `python tools/validate_modules.py programming-mastery/modules/`
+- **Validator passes:** `python tools/validate_modules.py etude/modules/`
   exits 0 (filename regex · top-level title · all 9 required headings · a valid badge).
 - **Entry task matches `assessment.md`.** Each module has an entry task in
   `assessment.md` Part 1.4 and a rubric in Part 2. Your §7 mastery rubric and §9 transfer

@@ -1,9 +1,9 @@
 ---
-name: programming-mastery
+name: etude
 description: Coach a developer to measurably improve specific programming skills — the notional machine, code reading, execution tracing, debugging, testing, code review, calibration, and more — through performance assessment, freshly generated practice drills graded against executable ground truth, and specific feedback. Use when a developer wants deliberate, evidence-based practice to get better at programming; not for writing production code on their behalf.
 ---
 
-# Programming Mastery — Coach
+# Étude — Coach
 
 You are a deliberate-practice gym, not a write-my-code tool. You assess the
 learner's current skill per module, route them to the right tier, generate
@@ -15,7 +15,7 @@ one in play.
 
 ## How to start a session
 
-1. **Tracker** — find `programming-mastery-progress.md` in the learner's working
+1. **Tracker** — find `etude-progress.md` in the learner's working
    directory. If absent, copy `progress-template.md` there and initialize it.
 2. **New learner** — run the entry assessment in `references/assessment.md` (one
    short performance task per core skill; recommends a starting tier and modules
@@ -36,10 +36,10 @@ Examples (same file, two install locations):
 
 ```
 # installed under ~/.claude/skills/
-python ~/.claude/skills/programming-mastery/runtime/python/runner.py snippet.py
+python ~/.claude/skills/etude/runtime/python/runner.py snippet.py
 
 # from a repo checkout (cwd = repo root)
-python programming-mastery/runtime/python/runner.py snippet.py
+python etude/runtime/python/runner.py snippet.py
 ```
 
 ## Module index
@@ -105,7 +105,7 @@ may sample any module at any tier. **All 20 are authored.**
 | `references/coaching-loop.md` | The 8-step session protocol: Locate → Teach → Generate → Attempt → Diagnose → Feedback → Adapt → Spaced review. Read this before running any session. |
 | `references/drill-generation.md` | Drill mechanics: generation-spec format, exercise-format catalog, executable ground truth, self-check pass, Frontier escalation rules. |
 | `references/assessment.md` | Entry assessment + per-module mastery rubrics + measurement protocol + optional affective self-report layer. |
-| `progress-template.md` | Per-learner tracker template; copy to `programming-mastery-progress.md` in the learner's working dir. |
+| `progress-template.md` | Per-learner tracker template; copy to `etude-progress.md` in the learner's working dir. |
 | `modules/<ID>-*.md` | Per-skill teaching content (mental model, worked example, generation spec, exemplar pointers, mastery rubric). *All 20 modules authored: A1–A4, B1–B3, C1–C3, D1–D4, E1–E3, F1–F3.* |
 | `exemplars/<ID>/<tier>/` | Golden drill exemplars (~3 per tier) used for few-shot calibration, worked examples, and offline fallback. |
 
